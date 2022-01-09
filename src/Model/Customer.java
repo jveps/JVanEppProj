@@ -1,38 +1,31 @@
 package Model;
 
 public class Customer {
-    private String first_name;
-    private String last_name;
+    private int id;
+    private String custName;
     private String address;
-    private int zipCode;
-    private int phoneNum;
+    private String zipCode;
+    private String phoneNum;
 
-    public Customer(String first_name, String last_name, String address, int zipCode, int phoneNum){
-        this.first_name = first_name;
-        this.last_name = last_name;
+    public Customer(int id, String custName, String address, String zipCode, String phoneNum){
+        this.id = id;
+        this.custName = custName;
         this.address = address;
         this.zipCode = zipCode;
         this.phoneNum = phoneNum;
 
     }
+    //Returns id
+    public int getId() {return id;}
+
     //Returns first name
-    public String getFirstName(){
-        return first_name;
+    public String getCustName(){
+        return custName;
     }
 
     //Sets first name
-    public void setFirstName(String first){
-        this.first_name = first;
-    }
-
-    //Returns last name
-    public String getLastName(){
-        return last_name;
-    }
-
-    //Sets last name
-    public void setLastName(String last){
-        this.last_name = last;
+    public void setCustName(String first){
+        this.custName = first;
     }
 
     //Returns address
@@ -46,22 +39,22 @@ public class Customer {
     }
 
     //Returns zip
-    public int getZip(){
+    public String getZipCode(){
         return zipCode;
     }
 
     //Sets zip
-    public void setZip(int z){
+    public void setZipCode(String z){
         this.zipCode = z;
     }
 
     //Returns phone
-    public int getPhoneNum(){
+    public String getPhoneNum(){
         return phoneNum;
     }
 
     //Sets phone
-    public void setPhoneNum(int p){
+    public void setPhoneNum(String p){
         this.phoneNum = p;
     }
 

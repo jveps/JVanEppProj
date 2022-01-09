@@ -52,6 +52,7 @@ public abstract class JDBC {
             ResultSet rSet = ps.executeQuery();
             rSet.next();
 
+
             if (rSet.getString("Password").equals(pass)){
 
                 return true;

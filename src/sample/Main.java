@@ -24,7 +24,9 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        Locale.setDefault(new Locale("fr"));
+        //Set language to "fr"
+        //Locale.setDefault(new Locale("fr"));
+
         JDBC.openConnection();
 
         //ResourceBundle rb = ResourceBundle.getBundle("sample/Nat", Locale.getDefault());

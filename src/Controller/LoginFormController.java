@@ -2,16 +2,21 @@ package Controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import DAO.JDBC;
+import javafx.stage.Stage;
 
 public class LoginFormController implements Initializable {
     @FXML
@@ -32,12 +37,21 @@ public class LoginFormController implements Initializable {
     @FXML
     private Button loginCancelButton;
 
+    Scene scene;
+    Stage stage;
+
     @FXML
-    void onActionOkButton(ActionEvent event) {
+    void onActionOkButton(ActionEvent event) throws IOException {
         String uName = loginUsernameField.getText();
         String pWord = loginPasswordField.getText();
         if (JDBC.loginTest(uName,pWord)){
             System.out.println("CORRECT PASSWORD");
+
+            //Open RecordOverview screen
+            stage = (Stage)((Button)event.getSource()).getScene().getWindow();
+            Parent scene = FXMLLoader.load(getClass().getResource("/View/RecordOverview.fxml"));
+            stage.setScene(new Scene(scene));
+            stage.show();
         }
         else{
             //Show error in appropriate language for incorrect username or password
