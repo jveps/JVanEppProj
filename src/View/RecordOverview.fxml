@@ -19,18 +19,23 @@
             <TableColumn fx:id="customerPhoneCol" prefWidth="125.0" text="Phone" />
         </columns>
       </TableView>
-      <TableView layoutX="143.0" layoutY="65.0" prefHeight="200.0" prefWidth="667.0">
+      <TableView fx:id="AppointmentTable" layoutX="10.0" layoutY="65.0" prefHeight="200.0" prefWidth="886.0">
         <columns>
-          <TableColumn prefWidth="100.0" text="AppointmentID" />
-          <TableColumn prefWidth="94.0" text="Title" />
-            <TableColumn prefWidth="115.0" text="Start Time" />
-            <TableColumn prefWidth="101.0" text="End Time" />
+          <TableColumn fx:id="appointmentIdCol" prefWidth="71.0" text="AppointmentID" />
+          <TableColumn fx:id="appointmentTitleCol" prefWidth="100.0" text="Title" />
+            <TableColumn fx:id="appointmentDescrCol" prefWidth="95.0" text="Description" />
+            <TableColumn fx:id="appointmentLocCol" prefWidth="110.0" text="Location" />
+            <TableColumn fx:id="appointmentContactCol" prefWidth="90.0" text="Contact" />
+            <TableColumn fx:id="appointmentTypeCol" prefWidth="94.0" text="Type" />
+            <TableColumn fx:id="appointmentStartCol" prefWidth="103.0" text="Start Date/Time" />
+            <TableColumn fx:id="appointmentEndCol" prefWidth="75.0" text="End Date/Time" />
+            <TableColumn fx:id="appointmentCustIdCol" prefWidth="75.0" text="CustomerID" />
+            <TableColumn fx:id="appointmentUserIdCol" prefWidth="75.0" text="UserID" />
         </columns>
       </TableView>
       <Button layoutX="280.0" layoutY="275.0" mnemonicParsing="false" text="Add" />
       <Button layoutX="349.0" layoutY="275.0" mnemonicParsing="false" text="Modify" />
       <Button layoutX="439.0" layoutY="275.0" mnemonicParsing="false" text="Delete" />
-      <Button layoutX="515.0" layoutY="275.0" mnemonicParsing="false" text="Detail" />
       <Button fx:id="addCustomerButton" layoutX="357.0" layoutY="599.0" mnemonicParsing="false" onAction="#addCustomerButtonPress" text="Add" />
       <Button layoutX="450.0" layoutY="599.0" mnemonicParsing="false" text="Modify" />
       <Button layoutX="562.0" layoutY="599.0" mnemonicParsing="false" text="Delete" />

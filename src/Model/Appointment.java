@@ -36,72 +36,72 @@ public class Appointment {
     }
 
     //Gets appointment title
-    public String getAppointmentTitle(){
+    public String getTitle(){
         return title;
     }
 
     //Sets appointment title
-    public void setAppointmentTitle(String t){
+    public void setTitle(String t){
         this.title = t;
     }
 
     //Get appointment description
-    public String getAppointmentDescription(){
+    public String getDescription(){
         return description;
     }
 
     //Set appointment description
-    public void setAppointmentDescription(String d){
+    public void setDescription(String d){
         this.description = d;
     }
 
     //Get appointment location
-    public String getAppointmentLocation(){
+    public String getLocation(){
         return location;
     }
 
     //Set appointment location
-    public void setAppointmentLocation(String l){
+    public void setLocation(String l){
         this.location = l;
     }
 
     //Return appointment contact
-    public String getAppointmentContact(){
+    public String getContact(){
         return contact;
     }
 
     //Set appointment contact
-    public void setAppointmentContact(String c){
+    public void setContact(String c){
         this.contact = c;
     }
 
     //Return appointment type
-    public String getAppointmentType(){
+    public String getType(){
         return type;
     }
 
     //Set appointment type
-    public void setAppointmentType(String t){
+    public void setType(String t){
         this.type = t;
     }
 
     //Returns Appointment start date and time
-    public String getAppointmentStartDateTime(){
+    public String getStartDateTime(){
         return startDateTime;
     }
 
     //Sets Appointment start date and time
-    public void setAppointmentStartDateTime(String sDT){
+    public void setStartDateTime(String sDT){
         this.startDateTime = sDT;
     }
 
     //Returns Appointment end date and time
-    public String getAppointmentEndDateTime(){
+    public String getEndDateTime(){
         return endDateTime;
     }
 
     //Sets Appointment end date and time
-    public void setAppointmentEndDateTime(String eDT){
+    public void setEndDateTime(String eDT){
         this.endDateTime = eDT;
     }
 

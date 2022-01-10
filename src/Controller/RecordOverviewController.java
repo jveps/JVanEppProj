@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.JDBC;
+import Model.Appointment;
 import Model.Customer;
 import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
@@ -43,8 +44,44 @@ public class RecordOverviewController implements Initializable {
     @FXML
     private TableColumn<Customer, String> customerPhoneCol;
 
+    @FXML
+    private TableView<Appointment> AppointmentTable;
+
+    @FXML
+    private TableColumn<Appointment, Integer> appointmentIdCol;
+
+    @FXML
+    private TableColumn<Appointment, String> appointmentTitleCol;
+
+    @FXML
+    private TableColumn<Appointment, String> appointmentDescrCol;
+
+    @FXML
+    private TableColumn<Appointment, String> appointmentLocCol;
+
+    @FXML
+    private TableColumn<Appointment, String> appointmentContactCol;
+
+    @FXML
+    private TableColumn<Appointment, String> appointmentTypeCol;
+
+    @FXML
+    private TableColumn<Appointment, String> appointmentStartCol;
+
+    @FXML
+    private TableColumn<Appointment, String> appointmentEndCol;
+
+    @FXML
+    private TableColumn<Appointment, Integer> appointmentCustIdCol;
+
+    @FXML
+    private TableColumn<Appointment, Integer> appointmentUserIdCol;
+
     //Create observable list for customer table
     private ObservableList<Customer> customerObsList = FXCollections.observableArrayList();
+
+    //Observable list for appointments table
+    private ObservableList<Appointment> appointmentObsList = FXCollections.observableArrayList();
 
     @FXML
     void addCustomerButtonPress(ActionEvent event) {
@@ -73,6 +110,32 @@ public class RecordOverviewController implements Initializable {
         CustomerTable.setItems(customerObsList);
     }
 
+    //Add data to appointments table
+    public void fillAppointmentTable(){
+        try {
+            //String sql = "SELECT * FROM appointments";
+            String sql = "SELECT * from appointments JOIN contacts ON appointments.Contact_ID = contacts.Contact_ID";
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            appointmentObsList.clear();
+
+            while (rs.next()){
+                appointmentObsList.add(new Appointment(rs.getInt("Appointment_ID"), rs.getString("Title"),
+                        rs.getString("Description"), rs.getString("Location"),
+                        rs.getString("Contact_Name"), rs.getString("Type"),
+                        rs.getString("Start"), rs.getString("End"), rs.getInt("Customer_ID"),
+                        rs.getInt("User_ID")));
+            }
+        }
+
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //Testing. May need to be changed later.
+        AppointmentTable.setItems(appointmentObsList);
+    }
+
     @FXML
     void quitButtonPressed(ActionEvent event) {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);
@@ -89,7 +152,7 @@ public class RecordOverviewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //Test populate table
+        //Test populate customer table
         CustomerTable.setItems(customerObsList);
         customerIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         customerNameCol.setCellValueFactory(new PropertyValueFactory<>("custName"));
@@ -97,7 +160,21 @@ public class RecordOverviewController implements Initializable {
         customerPostalCodeCol.setCellValueFactory(new PropertyValueFactory<>("zipCode"));
         customerPhoneCol.setCellValueFactory(new PropertyValueFactory<>("phoneNum"));
 
+        //Populate appointment table
+        AppointmentTable.setItems(appointmentObsList);
+        appointmentIdCol.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
+        appointmentTitleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+        appointmentDescrCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+        appointmentLocCol.setCellValueFactory(new PropertyValueFactory<>("location"));
+        appointmentContactCol.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        appointmentTypeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
+        appointmentStartCol.setCellValueFactory(new PropertyValueFactory<>("startDateTime"));
+        appointmentEndCol.setCellValueFactory(new PropertyValueFactory<>("endDateTime"));
+        appointmentCustIdCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+        appointmentUserIdCol.setCellValueFactory(new PropertyValueFactory<>("userId"));
+
         fillCustomerTable();
+        fillAppointmentTable();
 
 
 
