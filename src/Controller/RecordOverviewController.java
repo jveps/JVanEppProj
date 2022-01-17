@@ -8,10 +8,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -83,10 +88,8 @@ public class RecordOverviewController implements Initializable {
     //Observable list for appointments table
     private ObservableList<Appointment> appointmentObsList = FXCollections.observableArrayList();
 
-    @FXML
-    void addCustomerButtonPress(ActionEvent event) {
-
-    }
+    Scene scene;
+    Stage stage;
 
     public void fillCustomerTable(){
         try {
@@ -132,7 +135,7 @@ public class RecordOverviewController implements Initializable {
             e.printStackTrace();
         }
 
-        //Testing. May need to be changed later.
+        //Testing. Will need to order by month/week.
         AppointmentTable.setItems(appointmentObsList);
     }
 
@@ -148,6 +151,24 @@ public class RecordOverviewController implements Initializable {
         }
 
     }
+
+    @FXML
+    void addCustomerButtonPressed(ActionEvent event) {
+        try {
+            stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            Parent scene = FXMLLoader.load(getClass().getResource("/View/addCustomer.fxml"));
+            stage.setScene(new Scene(scene));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void addAppointmentButtonPressed(ActionEvent event) {
+
+    }
+
 
 
     @Override
