@@ -155,6 +155,7 @@ public class RecordOverviewController implements Initializable {
     @FXML
     void addCustomerButtonPressed(ActionEvent event) {
         try {
+            JDBC.createTempCustomer();
             stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
             Parent scene = FXMLLoader.load(getClass().getResource("/View/addCustomer.fxml"));
             stage.setScene(new Scene(scene));

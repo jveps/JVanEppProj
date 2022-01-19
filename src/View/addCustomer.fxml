@@ -18,7 +18,7 @@
       <TextField fx:id="addCustAddyField" layoutX="164.0" layoutY="142.0" />
       <TextField fx:id="addCustPostalCodeField" layoutX="164.0" layoutY="257.0" />
       <TextField fx:id="addCustPhoneField" layoutX="164.0" layoutY="289.0" />
-      <Button layoutX="187.0" layoutY="333.0" mnemonicParsing="false" text="Okay" />
+      <Button fx:id="addCustOkButton" layoutX="187.0" layoutY="333.0" mnemonicParsing="false" onAction="#addCustOkButtonPressed" text="Okay" />
       <Button layoutX="294.0" layoutY="333.0" mnemonicParsing="false" text="Cancel" />
       <Label layoutX="55.0" layoutY="223.0" text="City" />
       <Label layoutX="44.0" layoutY="185.0" text="Country" />

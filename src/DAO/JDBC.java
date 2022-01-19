@@ -1,5 +1,6 @@
 package DAO;
 
+import Model.Customer;
 import com.mysql.cj.protocol.Resultset;
 import com.mysql.cj.x.protobuf.MysqlxPrepare;
 import javafx.collections.FXCollections;
@@ -7,6 +8,10 @@ import javafx.collections.ObservableList;
 
 import javax.xml.transform.Result;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public abstract class JDBC {
     private static final String protocol = "jdbc";
@@ -93,6 +98,7 @@ public abstract class JDBC {
         return allCountryObsList;
     }
 
+    //This returns an observablelist of divisions related to to the country that was given
     public static ObservableList<String> getCountryDivisions(String country){
         ObservableList<String> divisionObsList = FXCollections.observableArrayList();
         try{
@@ -109,5 +115,74 @@ public abstract class JDBC {
         }
 
         return divisionObsList;
+    }
+
+    //Adds customer to db
+    public static boolean addCustomer(String id, String name, String address, String country, String division, String postCode, String phone){
+        //String sql = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update," +
+        //        "Last_Updated_By, Division_ID) VALUES ()";
+        try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime ldt = LocalDateTime.now();
+            ZonedDateTime currTime = ldt.atZone(ZoneId.systemDefault());
+            String createdDate = currTime.format(dtf).toString();
+
+
+            String createdBy = "test";
+            String updatedBy = "test";
+            String divId = "1";
+            String lastUpdate = createdDate;
+            /*String sql = "INSERT INTO customers (Customer_Name, Address," +
+                    "Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By," +
+                    "Division_ID) VALUES ('" + name + "','" + address + "','" + postCode + "','" + phone + "','" + createdDate +
+                    "','" + createdBy + "','" + lastUpdate + "','" + updatedBy + "','" + divId + "');";
+            System.out.println("QUERY" + sql);
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.executeUpdate();
+            ps.close();*/
+            String sql = String.format("UPDATE customers SET Customer_Name= '%s', Address= '%s', Postal_Code= '%s', Phone= '%s', Create_Date= '%s'," +
+                    "Created_By= '%s', Last_Update= '%s', Last_Updated_By= '%s', Division_ID= '%s' WHERE " +
+                            "Customer_ID = '%s'", name,address,postCode,phone,createdDate,
+                    createdBy,lastUpdate,updatedBy,divId,id);
+            System.out.println(sql);
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.executeUpdate();
+
+
+            return true;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return false;
+        }
+    }
+
+    //Gets next customer ID
+    public static String getNextCustomerId(){
+        try {
+            String maxId;
+            String sql = "SELECT MAX(Customer_ID) FROM customers;";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ResultSet rSet = ps.executeQuery();
+            rSet.next();
+            //maxId = rSet.getInt("MAX(Customer_ID)");
+            maxId = rSet.getString("MAX(Customer_ID)");
+            //maxId += 1;
+            //return Integer.toString(maxId);
+            return maxId;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return "ERROR";
+        }
+    }
+
+    //Creates a temp customer to be modified when a new customer is added
+    public static void createTempCustomer(){
+        try{
+            String sql = "INSERT INTO customers (Customer_Name, Division_ID) VALUES ('tempName','1')";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.executeUpdate();
+        }catch(SQLException throwables){
+            throwables.printStackTrace();
+        }
     }
 }
