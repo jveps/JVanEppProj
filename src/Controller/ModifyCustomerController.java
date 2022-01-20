@@ -53,7 +53,13 @@ public class ModifyCustomerController implements Initializable {
 
     @FXML
     void modCustomerComBoxAction(ActionEvent event) {
-
+        String a = modCustCountryComboBox.getValue();
+        System.out.println(a);
+        if (a != null){
+            modCustCityComboBox.setDisable(false);
+        }
+        modCustCityComboBox.valueProperty().set(null);
+        modCustCityComboBox.setItems(JDBC.getCountryDivisions(a));
     }
 
     public void sendCustomer(Customer c){
@@ -70,5 +76,6 @@ public class ModifyCustomerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         modCustCountryComboBox.setItems(JDBC.getAllCountry());
+        modCustIdField.setEditable(false);
     }
 }
