@@ -185,4 +185,15 @@ public abstract class JDBC {
             throwables.printStackTrace();
         }
     }
+
+    public static void deleteCustomer(String id){
+        try {
+            String sql = "DELETE FROM customers WHERE Customer_ID='" + id + "';";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.executeUpdate();
+
+        }catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
+    }
 }

@@ -44,6 +44,12 @@ public class RecordOverviewController implements Initializable {
     private TableColumn<Customer, String> customerAddressCol;
 
     @FXML
+    private TableColumn<Customer, String> customerCountryCol;
+
+    @FXML
+    private TableColumn<Customer, String> customerDivCol;
+
+    @FXML
     private TableColumn<Customer, String> customerPostalCodeCol;
 
     @FXML
@@ -93,15 +99,16 @@ public class RecordOverviewController implements Initializable {
 
     public void fillCustomerTable(){
         try {
-            String sql = "SELECT * FROM customers";
+            //String sql = "SELECT * FROM customers";
+            String sql = "select * from customers join first_level_divisions on customers.Division_ID = first_level_divisions.Division_ID join countries on first_level_divisions.Country_ID = countries.Country_ID;";
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             customerObsList.clear();
 
             while (rs.next()){
-                System.out.println("Customer Names");
-                System.out.println(rs.getString("Customer_Name"));
-                customerObsList.add(new Customer(rs.getInt("Customer_ID"), rs.getString("Customer_Name"),rs.getString("Address"),rs.getString("Postal_Code"),rs.getString("Phone")));
+
+                customerObsList.add(new Customer(rs.getInt("Customer_ID"), rs.getString("Customer_Name"),rs.getString("Address"),rs.getString("Country"),rs.getString("Division"),rs.getString("Postal_Code"),rs.getString("Phone")));
+                System.out.println("Country and Divs: " + rs.getString("Country") + rs.getString("Division"));
             }
         }
 
@@ -170,7 +177,26 @@ public class RecordOverviewController implements Initializable {
 
     }
 
+    @FXML
+    void modifyCustomerButtonPressed(ActionEvent event) throws IOException{
+        if (CustomerTable.getSelectionModel().getSelectedItem() == null){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("ERROR");
+            a.setContentText("Please select a customer");
+            a.showAndWait();
+        }else{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/View/modifyCustomer.fxml"));
+            loader.load();
+            ModifyCustomerController modCustCont = loader.getController();
+            modCustCont.sendCustomer(CustomerTable.getSelectionModel().getSelectedItem());
 
+            stage = (Stage)((Button)event.getSource()).getScene().getWindow();
+            Parent scene = loader.getRoot();
+            stage.setScene(new Scene(scene));
+            stage.show();
+        }
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -179,6 +205,8 @@ public class RecordOverviewController implements Initializable {
         customerIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         customerNameCol.setCellValueFactory(new PropertyValueFactory<>("custName"));
         customerAddressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+        customerCountryCol.setCellValueFactory(new PropertyValueFactory<>("country"));
+        customerDivCol.setCellValueFactory(new PropertyValueFactory<>("division"));
         customerPostalCodeCol.setCellValueFactory(new PropertyValueFactory<>("zipCode"));
         customerPhoneCol.setCellValueFactory(new PropertyValueFactory<>("phoneNum"));
 

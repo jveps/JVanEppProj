@@ -2,14 +2,19 @@ package Controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import DAO.JDBC;
+import javafx.stage.Stage;
 
 public class AddCustomerController implements Initializable {
 
@@ -36,6 +41,9 @@ public class AddCustomerController implements Initializable {
 
     @FXML
     private Button addCustOkButton;
+
+    @FXML
+    private Button addCustCancelButton;
 
 
 
@@ -75,5 +83,16 @@ public class AddCustomerController implements Initializable {
         if (JDBC.addCustomer(newCustId, newCustName, newCustAddress, newCustCountry, newCustDivision, newCustPostalCode, newCustPhoneNum)){
             System.out.println("Successful!");
         };
+    }
+
+    //Removes the temp customer and returns to record overview
+    @FXML
+    void addCustCancelButtonPressed(ActionEvent event) throws IOException {
+        JDBC.deleteCustomer(addCustIdField.getText());
+        Stage stage;
+        stage = (Stage)((Button)event.getSource()).getScene().getWindow();
+        Parent scene = FXMLLoader.load(getClass().getResource("/View/RecordOverview.fxml"));
+        stage.setScene(new Scene(scene));
+        stage.show();
     }
 }

@@ -6,13 +6,17 @@ public class Customer {
     private String address;
     private String zipCode;
     private String phoneNum;
+    private String country;
+    private String division;
 
-    public Customer(int id, String custName, String address, String zipCode, String phoneNum){
+    public Customer(int id, String custName, String address, String country, String division, String zipCode, String phoneNum){
         this.id = id;
         this.custName = custName;
         this.address = address;
         this.zipCode = zipCode;
         this.phoneNum = phoneNum;
+        this.country = country;
+        this.division = division;
 
     }
     //Returns id
@@ -57,5 +61,17 @@ public class Customer {
     public void setPhoneNum(String p){
         this.phoneNum = p;
     }
+
+    //Returns country
+    public String getCountry(){ return country; }
+
+    //Sets country
+    public void setCountry(String c){ this.country = c; }
+
+    //Returns division
+    public String getDivision(){ return division; }
+
+    //Sets division
+    public void setDivision(String d){ this.division = d; }
 
 }
