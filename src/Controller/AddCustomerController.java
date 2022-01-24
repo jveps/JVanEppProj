@@ -6,9 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -71,7 +69,7 @@ public class AddCustomerController implements Initializable {
     }
 
     @FXML
-    void addCustOkButtonPressed(ActionEvent event) {
+    void addCustOkButtonPressed(ActionEvent event) throws IOException {
         String newCustId = addCustIdField.getText();
         String newCustName = addCustNameField.getText();
         String newCustAddress = addCustAddyField.getText();
@@ -80,9 +78,20 @@ public class AddCustomerController implements Initializable {
         String newCustPostalCode = addCustPostalCodeField.getText();
         String newCustPhoneNum = addCustPhoneField.getText();
 
-        if (JDBC.addCustomer(newCustId, newCustName, newCustAddress, newCustCountry, newCustDivision, newCustPostalCode, newCustPhoneNum)){
-            System.out.println("Successful!");
-        };
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setTitle("Add new customer");
+        a.setContentText("Are you sure you want to add this customer?");
+        a.showAndWait();
+        if (a.getResult() == ButtonType.OK){
+            if (JDBC.addCustomer(newCustId, newCustName, newCustAddress, newCustCountry, newCustDivision, newCustPostalCode, newCustPhoneNum)) {
+
+                Stage stage;
+                stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+                Parent scene = FXMLLoader.load(getClass().getResource("/View/RecordOverview.fxml"));
+                stage.setScene(new Scene(scene));
+                stage.show();
+            }
+        }
     }
 
     //Removes the temp customer and returns to record overview

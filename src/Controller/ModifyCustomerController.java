@@ -63,13 +63,15 @@ public class ModifyCustomerController implements Initializable {
         String newCustPostalCode = modCustPostalCodeField.getText();
         String newCustPhoneNum = modCustPhoneField.getText();
 
-        //There is currently a bug in this if statement. The default selection in the comboboxes are being detected as empty right now.
-        if (newCustName.trim().isEmpty()  || newCustAddress.trim().isEmpty() || modCustCityComboBox.getSelectionModel().isEmpty() || modCustCityComboBox.getSelectionModel().isEmpty() ||
-        newCustPostalCode.trim().isEmpty() || newCustPhoneNum.trim().isEmpty()){
+
+
+        if (newCustName.isBlank()  || newCustAddress.isBlank() || newCustCountry.isBlank() || newCustDivision.isBlank() ||
+        newCustPostalCode.isBlank() || newCustPhoneNum.isBlank()){
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("ERROR");
             a.setContentText("Please ensure all fields are filled");
             a.showAndWait();
+
         }
 
         else{
@@ -106,8 +108,10 @@ public class ModifyCustomerController implements Initializable {
         modCustIdField.setText(String.valueOf(c.getId()));
         modCustNameField.setText(c.getCustName());
         modCustAddyField.setText(c.getAddress());
-        modCustCountryComboBox.setValue(c.getCountry());
-        modCustCityComboBox.setValue(c.getDivision());
+        modCustCityComboBox.setItems(JDBC.getCountryDivisions(c.getCountry()));
+        modCustCountryComboBox.getSelectionModel().select(c.getCountry());
+        modCustCityComboBox.getSelectionModel().select(c.getDivision());
+
         modCustPostalCodeField.setText(c.getZipCode());
         modCustPhoneField.setText(c.getPhoneNum());
 

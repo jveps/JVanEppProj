@@ -198,6 +198,31 @@ public class RecordOverviewController implements Initializable {
         }
     }
 
+    @FXML
+    void deleteCustomerButtonPressed(ActionEvent event) throws IOException {
+        if (CustomerTable.getSelectionModel().getSelectedItem() == null){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("ERROR");
+            a.setContentText("Please select a customer");
+            a.showAndWait();
+        }else{
+            Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+            a.setTitle("Alert");
+            a.setContentText("Are you sure you want to delete this customer?");
+            a.showAndWait();
+            if(a.getResult() == ButtonType.OK) {
+                String s = Integer.toString(CustomerTable.getSelectionModel().getSelectedItem().getId());
+                JDBC.deleteCustomer(s);
+                fillCustomerTable();
+
+            }
+        }
+    }
+
+    public void refreshCustomerTable(){
+
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Test populate customer table

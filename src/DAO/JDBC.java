@@ -127,10 +127,10 @@ public abstract class JDBC {
             ZonedDateTime currTime = ldt.atZone(ZoneId.systemDefault());
             String createdDate = currTime.format(dtf).toString();
 
-
+            //Testing data is currently present. divId variable is always set to 1.
             String createdBy = "test";
             String updatedBy = "test";
-            String divId = "1";
+            //String divId = "1";
             String lastUpdate = createdDate;
             /*String sql = "INSERT INTO customers (Customer_Name, Address," +
                     "Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By," +
@@ -141,9 +141,9 @@ public abstract class JDBC {
             ps.executeUpdate();
             ps.close();*/
             String sql = String.format("UPDATE customers SET Customer_Name= '%s', Address= '%s', Postal_Code= '%s', Phone= '%s', Create_Date= '%s'," +
-                    "Created_By= '%s', Last_Update= '%s', Last_Updated_By= '%s', Division_ID= '%s' WHERE " +
+                    "Created_By= '%s', Last_Update= '%s', Last_Updated_By= '%s', Division_ID=(Select Division_ID from first_level_divisions where Division='%s') WHERE " +
                             "Customer_ID = '%s'", name,address,postCode,phone,createdDate,
-                    createdBy,lastUpdate,updatedBy,divId,id);
+                    createdBy,lastUpdate,updatedBy,division, id);
             System.out.println(sql);
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ps.executeUpdate();
