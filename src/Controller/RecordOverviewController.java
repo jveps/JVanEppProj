@@ -173,8 +173,11 @@ public class RecordOverviewController implements Initializable {
     }
 
     @FXML
-    void addAppointmentButtonPressed(ActionEvent event) {
-
+    void addAppointmentButtonPressed(ActionEvent event) throws IOException {
+        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            Parent scene = FXMLLoader.load(getClass().getResource("/View/addAppointment.fxml"));
+            stage.setScene(new Scene(scene));
+            stage.show();
     }
 
     @FXML
@@ -217,10 +220,6 @@ public class RecordOverviewController implements Initializable {
 
             }
         }
-    }
-
-    public void refreshCustomerTable(){
-
     }
 
     @Override
