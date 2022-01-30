@@ -6,7 +6,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
 <AnchorPane prefHeight="436.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AddAppointmentController">
    <children>
       <Label layoutX="94.0" layoutY="14.0" text="Appointment ID" />
@@ -29,7 +28,7 @@
       <TextField fx:id="addAppointmentCustIDField" layoutX="238.0" layoutY="310.0" />
       <TextField fx:id="addAppointmentUserIDField" layoutX="238.0" layoutY="353.0" />
       <ChoiceBox fx:id="addAppointmentChoiceBox" layoutX="238.0" layoutY="173.0" prefWidth="150.0" />
-      <Button layoutX="180.0" layoutY="397.0" mnemonicParsing="false" text="Okay" />
-      <Button layoutX="335.0" layoutY="397.0" mnemonicParsing="false" text="Cancel" />
+      <Button layoutX="180.0" layoutY="397.0" mnemonicParsing="false" onAction="#addAppointmentOkButtonPressed" text="Okay" />
+      <Button layoutX="335.0" layoutY="397.0" mnemonicParsing="false" onAction="#addAppointmentCancelButtonPressed" text="Cancel" />
    </children>
 </AnchorPane>

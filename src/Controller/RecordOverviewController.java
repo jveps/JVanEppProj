@@ -100,7 +100,7 @@ public class RecordOverviewController implements Initializable {
     public void fillCustomerTable(){
         try {
             //String sql = "SELECT * FROM customers";
-            String sql = "select * from customers join first_level_divisions on customers.Division_ID = first_level_divisions.Division_ID join countries on first_level_divisions.Country_ID = countries.Country_ID;";
+            String sql = "select * from customers join first_level_divisions on customers.Division_ID = first_level_divisions.Division_ID join countries on first_level_divisions.Country_ID = countries.Country_ID AND customers.Customer_ID NOT IN (1);";
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             customerObsList.clear();
@@ -174,10 +174,11 @@ public class RecordOverviewController implements Initializable {
 
     @FXML
     void addAppointmentButtonPressed(ActionEvent event) throws IOException {
+        JDBC.createTempAppointment();
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            Parent scene = FXMLLoader.load(getClass().getResource("/View/addAppointment.fxml"));
-            stage.setScene(new Scene(scene));
-            stage.show();
+        Parent scene = FXMLLoader.load(getClass().getResource("/View/addAppointment.fxml"));
+        stage.setScene(new Scene(scene));
+        stage.show();
     }
 
     @FXML

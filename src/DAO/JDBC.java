@@ -175,6 +175,22 @@ public abstract class JDBC {
         }
     }
 
+    //Gets next appointment ID
+    public static String getNextAppointmentId(){
+        try {
+            String maxAppId;
+            String sql = "SELECT MAX(Appointment_ID) FROM appointments;";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ResultSet rSet = ps.executeQuery();
+            rSet.next();
+            maxAppId = rSet.getString("MAX(Appointment_ID)");
+            return maxAppId;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return "ERROR";
+        }
+    }
+
     //Creates a temp customer to be modified when a new customer is added
     public static void createTempCustomer(){
         try{
@@ -186,6 +202,17 @@ public abstract class JDBC {
         }
     }
 
+    //Creates a temp appointment to be modified when a new appointment is added
+    public static void createTempAppointment(){
+        try{
+            String sql = "insert into appointments (Title, Customer_ID, User_ID, Contact_ID) values ('temp appointment', '1', '1', '999')";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void deleteCustomer(String id){
         try {
             String sql = "DELETE FROM customers WHERE Customer_ID='" + id + "';";
@@ -194,6 +221,16 @@ public abstract class JDBC {
 
         }catch (SQLException throwables){
             throwables.printStackTrace();
+        }
+    }
+
+    public static void deleteAppointment(String id){
+        try{
+            String sql = "DELETE FROM appointments WHERE Appointment_ID='" + id + "';";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
