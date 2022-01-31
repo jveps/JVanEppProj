@@ -130,7 +130,7 @@ public class RecordOverviewController implements Initializable {
             appointmentObsList.clear();
 
             while (rs.next()){
-                appointmentObsList.add(new Appointment(rs.getInt("Appointment_ID"), rs.getString("Title"),
+                appointmentObsList.add(new Appointment(rs.getString("Appointment_ID"), rs.getString("Title"),
                         rs.getString("Description"), rs.getString("Location"),
                         rs.getString("Contact_Name"), rs.getString("Type"),
                         rs.getString("Start"), rs.getString("End"), rs.getInt("Customer_ID"),
@@ -203,6 +203,11 @@ public class RecordOverviewController implements Initializable {
     }
 
     @FXML
+    void modAppointmentButtonPressed(ActionEvent event) {
+
+    }
+
+    @FXML
     void deleteCustomerButtonPressed(ActionEvent event) throws IOException {
         if (CustomerTable.getSelectionModel().getSelectedItem() == null){
             Alert a = new Alert(Alert.AlertType.ERROR);
@@ -221,6 +226,11 @@ public class RecordOverviewController implements Initializable {
 
             }
         }
+    }
+
+    @FXML
+    void delAppointmentButtonPressed(ActionEvent event) {
+
     }
 
     @Override

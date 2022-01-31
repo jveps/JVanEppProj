@@ -1,7 +1,7 @@
 package Model;
 
 public class Appointment {
-    private int appointmentId;
+    private String appointmentId;
     private String title;
     private String description;
     private String location;
@@ -12,7 +12,7 @@ public class Appointment {
     private int customerId;
     private int userId;
 
-    public Appointment(int aptId, String title, String desc, String loc, String contact, String type, String sDateTime, String eDateTime, int cId, int uId){
+    public Appointment(String aptId, String title, String desc, String loc, String contact, String type, String sDateTime, String eDateTime, int cId, int uId){
         this.appointmentId = aptId;
         this.title = title;
         this.description = desc;
@@ -26,12 +26,12 @@ public class Appointment {
     }
 
     //Gets appointment ID
-    public int getAppointmentId(){
+    public String getAppointmentId(){
         return appointmentId;
     }
 
     //Set appointment ID
-    public void setAppointmentId(int a){
+    public void setAppointmentId(String a) {
         this.appointmentId = a;
     }
 

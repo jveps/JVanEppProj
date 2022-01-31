@@ -1,6 +1,7 @@
 package Controller;
 
 import DAO.JDBC;
+import Model.Appointment;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class AddAppointmentController implements Initializable {
@@ -67,10 +69,10 @@ public class AddAppointmentController implements Initializable {
     private ChoiceBox<String> sTimeAMPM;
 
     @FXML
-    private ChoiceBox<String> eTimeHr;
+    private ChoiceBox<Integer> eTimeHr;
 
     @FXML
-    private ChoiceBox<String> eTimeMin;
+    private ChoiceBox<Integer> eTimeMin;
 
     @FXML
     private ChoiceBox<String> eTimeAMPM;
@@ -102,16 +104,22 @@ public class AddAppointmentController implements Initializable {
         String sAMPM = sTimeAMPM.getValue();
         //end time/date
 
-        String eHour = eTimeHr.getValue();
-        String eMin = eTimeMin.getValue();
+        int eHour = eTimeHr.getValue();
+        int eMin = eTimeMin.getValue();
         String eAMPM = eTimeAMPM.getValue();
         String newAppCustomerID = addAppointmentCustIDField.getText();
         String newAppUserID = addAppointmentUserIDField.getText();
 
         LocalDateTime ldt = LocalDateTime.of(sYear,sMonth, sDay ,sHour, sMin);
+        LocalDateTime edt = LocalDateTime.of(sYear,sMonth,sDay,eHour, eMin);
         System.out.println("ldt = " + ldt);
 
+        Appointment a = new Appointment(newAppID, newAppTitle, newAppDescription, newAppLocation, newAppContact,
+                newAppType, ldt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), edt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                Integer.parseInt(newAppCustomerID), Integer.parseInt(newAppUserID));
 
+        //Next task here: needs to be converted to UTC???
+        //Also, needs to be added to database
     }
 
     @Override
@@ -125,5 +133,8 @@ public class AddAppointmentController implements Initializable {
         sTimeYear.getItems().addAll(2022);
         sTimeHr.getItems().addAll(8,9,10,11,12,1,2,3,4,5,6,7,8,9,10);
         sTimeMin.getItems().addAll(00, 15,30,45);
+
+        eTimeHr.getItems().addAll(8,9,10,11,12,1,2,3,4,5,6,7,8,9,10);
+        eTimeMin.getItems().addAll(00, 15,30,45);
     }
 }

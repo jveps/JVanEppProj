@@ -36,8 +36,8 @@
         </columns>
       </TableView>
       <Button layoutX="280.0" layoutY="275.0" mnemonicParsing="false" onAction="#addAppointmentButtonPressed" text="Add" />
-      <Button layoutX="349.0" layoutY="275.0" mnemonicParsing="false" text="Modify" />
-      <Button layoutX="439.0" layoutY="275.0" mnemonicParsing="false" text="Delete" />
+      <Button layoutX="349.0" layoutY="275.0" mnemonicParsing="false" onAction="#modAppointmentButtonPressed" text="Modify" />
+      <Button layoutX="439.0" layoutY="275.0" mnemonicParsing="false" onAction="#delAppointmentButtonPressed" text="Delete" />
       <Button fx:id="addCustomerButton" layoutX="357.0" layoutY="599.0" mnemonicParsing="false" onAction="#addCustomerButtonPressed" text="Add" />
       <Button layoutX="450.0" layoutY="599.0" mnemonicParsing="false" onAction="#modifyCustomerButtonPressed" text="Modify" />
       <Button layoutX="562.0" layoutY="599.0" mnemonicParsing="false" onAction="#deleteCustomerButtonPressed" text="Delete" />
