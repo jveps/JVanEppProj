@@ -13,8 +13,11 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.ZoneId;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
+
 import DAO.JDBC;
 import javafx.stage.Stage;
 
@@ -36,6 +39,9 @@ public class LoginFormController implements Initializable {
 
     @FXML
     private Button loginCancelButton;
+
+    @FXML
+    private Label zoneIDLabel;
 
     Scene scene;
     Stage stage;
@@ -79,6 +85,10 @@ public class LoginFormController implements Initializable {
         loginPasswordLabel.setText(rb.getString("Password") + ":");
         loginOkButton.setText(rb.getString("Okay"));
         loginCancelButton.setText(rb.getString("Cancel"));
+        ZoneId zID = ZoneId.of(TimeZone.getDefault().getID());
+        zoneIDLabel.setText(zID.toString());
+
+
 
     }
 

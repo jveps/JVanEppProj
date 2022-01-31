@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="436.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AddAppointmentController">
+<AnchorPane prefHeight="474.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AddAppointmentController">
    <children>
       <Label layoutX="94.0" layoutY="14.0" text="Appointment ID" />
       <TextField fx:id="addAppointmentAppIDField" layoutX="238.0" layoutY="10.0" />
@@ -15,20 +15,28 @@
       <Label layoutX="95.0" layoutY="141.0" text="Location" />
       <Label layoutX="97.0" layoutY="177.0" text="Contact" />
       <Label layoutX="99.0" layoutY="212.0" text="Type" />
-      <Label layoutX="95.0" layoutY="250.0" text="Start Time/Date" />
-      <Label layoutX="98.0" layoutY="283.0" text="End Time/Date" />
-      <Label layoutX="99.0" layoutY="314.0" text="Customer ID" />
-      <Label layoutX="99.0" layoutY="357.0" text="User ID" />
+      <Label layoutX="97.0" layoutY="290.0" text="Start Time" />
+      <Label layoutX="100.0" layoutY="323.0" text="End Time" />
+      <Label layoutX="101.0" layoutY="354.0" text="Customer ID" />
+      <Label layoutX="101.0" layoutY="397.0" text="User ID" />
       <TextField fx:id="addAppointmentTitleField" layoutX="238.0" layoutY="56.0" />
       <TextField fx:id="addAppointmentDescriptionField" layoutX="238.0" layoutY="91.0" />
       <TextField fx:id="addAppointmentLocationField" layoutX="238.0" layoutY="129.0" />
       <TextField fx:id="addAppointmentTypeField" layoutX="238.0" layoutY="208.0" />
-      <TextField fx:id="addAppointmentStartTimeField" layoutX="238.0" layoutY="246.0" />
-      <TextField fx:id="addAppointmentendTimeField" layoutX="238.0" layoutY="279.0" />
-      <TextField fx:id="addAppointmentCustIDField" layoutX="238.0" layoutY="310.0" />
-      <TextField fx:id="addAppointmentUserIDField" layoutX="238.0" layoutY="353.0" />
+      <TextField fx:id="addAppointmentCustIDField" layoutX="240.0" layoutY="350.0" />
+      <TextField fx:id="addAppointmentUserIDField" layoutX="240.0" layoutY="393.0" />
       <ChoiceBox fx:id="addAppointmentChoiceBox" layoutX="238.0" layoutY="173.0" prefWidth="150.0" />
-      <Button layoutX="180.0" layoutY="397.0" mnemonicParsing="false" onAction="#addAppointmentOkButtonPressed" text="Okay" />
-      <Button layoutX="335.0" layoutY="397.0" mnemonicParsing="false" onAction="#addAppointmentCancelButtonPressed" text="Cancel" />
+      <Button layoutX="180.0" layoutY="429.0" mnemonicParsing="false" onAction="#addAppointmentOkButtonPressed" text="Okay" />
+      <Button layoutX="335.0" layoutY="429.0" mnemonicParsing="false" onAction="#addAppointmentCancelButtonPressed" text="Cancel" />
+      <ChoiceBox fx:id="sTimeMonth" layoutX="240.0" layoutY="244.0" prefHeight="25.0" prefWidth="54.0" />
+      <ChoiceBox fx:id="sTimeDay" layoutX="304.0" layoutY="244.0" prefHeight="25.0" prefWidth="52.0" />
+      <ChoiceBox fx:id="sTimeHr" layoutX="240.0" layoutY="278.0" prefHeight="25.0" prefWidth="52.0" />
+      <ChoiceBox fx:id="sTimeMin" layoutX="304.0" layoutY="278.0" prefHeight="25.0" prefWidth="52.0" />
+      <ChoiceBox fx:id="sTimeAMPM" layoutX="368.0" layoutY="278.0" prefHeight="25.0" prefWidth="52.0" />
+      <ChoiceBox fx:id="eTimeHr" layoutX="240.0" layoutY="311.0" prefHeight="25.0" prefWidth="52.0" />
+      <ChoiceBox fx:id="eTimeMin" layoutX="304.0" layoutY="311.0" prefHeight="25.0" prefWidth="52.0" />
+      <ChoiceBox fx:id="eTimeAMPM" layoutX="368.0" layoutY="311.0" prefHeight="25.0" prefWidth="52.0" />
+      <Label layoutX="98.0" layoutY="248.0" text="Date" />
+      <ChoiceBox fx:id="sTimeYear" layoutX="368.0" layoutY="244.0" prefHeight="25.0" prefWidth="61.0" />
    </children>
 </AnchorPane>

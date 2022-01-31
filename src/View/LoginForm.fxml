@@ -13,5 +13,7 @@
       <TextField fx:id="loginPasswordField" layoutX="213.0" layoutY="136.0" />
       <Button fx:id="loginOkButton" layoutX="136.0" layoutY="262.0" mnemonicParsing="false" onAction="#onActionOkButton" text="Okay" />
       <Button fx:id="loginCancelButton" layoutX="274.0" layoutY="262.0" mnemonicParsing="false" text="Cancel" />
+      <Label layoutX="387.0" layoutY="346.0" text="ZoneID:" />
+      <Label fx:id="zoneIDLabel" layoutX="457.0" layoutY="346.0" text="Label" />
    </children>
 </AnchorPane>

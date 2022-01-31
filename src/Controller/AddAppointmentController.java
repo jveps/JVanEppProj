@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class AddAppointmentController implements Initializable {
@@ -47,6 +48,33 @@ public class AddAppointmentController implements Initializable {
     @FXML
     private ChoiceBox<String> addAppointmentChoiceBox;
 
+     @FXML
+    private ChoiceBox<Integer> sTimeMonth;
+
+    @FXML
+    private ChoiceBox<Integer> sTimeDay;
+
+    @FXML
+    private ChoiceBox<Integer> sTimeYear;
+
+    @FXML
+    private ChoiceBox<Integer> sTimeHr;
+
+    @FXML
+    private ChoiceBox<Integer> sTimeMin;
+
+    @FXML
+    private ChoiceBox<String> sTimeAMPM;
+
+    @FXML
+    private ChoiceBox<String> eTimeHr;
+
+    @FXML
+    private ChoiceBox<String> eTimeMin;
+
+    @FXML
+    private ChoiceBox<String> eTimeAMPM;
+
     @FXML
     void addAppointmentCancelButtonPressed(ActionEvent event) throws IOException {
         JDBC.deleteAppointment(addAppointmentAppIDField.getText());
@@ -63,13 +91,25 @@ public class AddAppointmentController implements Initializable {
         String newAppTitle = addAppointmentTitleField.getText();
         String newAppDescription = addAppointmentDescriptionField.getText();
         String newAppLocation = addAppointmentLocationField.getText();
-        //Area reserved for contact drop down
         String newAppContact = addAppointmentChoiceBox.getValue();
         String newAppType = addAppointmentTypeField.getText();
         //Start time/date
+        int sMonth = sTimeMonth.getValue();
+        int sDay = sTimeDay.getValue();
+        int sYear = sTimeYear.getValue();
+        int sHour = sTimeHr.getValue();
+        int sMin = sTimeMin.getValue();
+        String sAMPM = sTimeAMPM.getValue();
         //end time/date
+
+        String eHour = eTimeHr.getValue();
+        String eMin = eTimeMin.getValue();
+        String eAMPM = eTimeAMPM.getValue();
         String newAppCustomerID = addAppointmentCustIDField.getText();
         String newAppUserID = addAppointmentUserIDField.getText();
+
+        LocalDateTime ldt = LocalDateTime.of(sYear,sMonth, sDay ,sHour, sMin);
+        System.out.println("ldt = " + ldt);
 
 
     }
@@ -79,5 +119,11 @@ public class AddAppointmentController implements Initializable {
         addAppointmentAppIDField.setText(JDBC.getNextAppointmentId());
         addAppointmentAppIDField.setEditable(false);
         addAppointmentChoiceBox.getItems().addAll("Anika Costa", "Daniel Garcia", "Li Lee");
+        sTimeMonth.getItems().addAll(1 , 2 , 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+        sTimeDay.getItems().addAll(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
+                26,27,28,29,30,31);
+        sTimeYear.getItems().addAll(2022);
+        sTimeHr.getItems().addAll(8,9,10,11,12,1,2,3,4,5,6,7,8,9,10);
+        sTimeMin.getItems().addAll(00, 15,30,45);
     }
 }
