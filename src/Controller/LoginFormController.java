@@ -13,7 +13,9 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
@@ -88,7 +90,12 @@ public class LoginFormController implements Initializable {
         ZoneId zID = ZoneId.of(TimeZone.getDefault().getID());
         zoneIDLabel.setText(zID.toString());
 
-
+        //TEST
+        LocalDateTime ldt = LocalDateTime.now();
+        ZonedDateTime zonedLDT = ldt.atZone(ZoneId.systemDefault());
+        ZonedDateTime zonedEST = zonedLDT.withZoneSameInstant(ZoneId.of("America/New_York"));
+        System.out.println("DEFAULT: " + zonedLDT);
+        System.out.println("EST: " + zonedEST);
 
     }
 

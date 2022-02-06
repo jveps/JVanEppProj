@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
@@ -16,6 +17,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
@@ -89,34 +91,70 @@ public class AddAppointmentController implements Initializable {
 
     @FXML
     void addAppointmentOkButtonPressed(ActionEvent event) {
-        String newAppID = addAppointmentAppIDField.getText();
-        String newAppTitle = addAppointmentTitleField.getText();
-        String newAppDescription = addAppointmentDescriptionField.getText();
-        String newAppLocation = addAppointmentLocationField.getText();
-        String newAppContact = addAppointmentChoiceBox.getValue();
-        String newAppType = addAppointmentTypeField.getText();
-        //Start time/date
-        int sMonth = sTimeMonth.getValue();
-        int sDay = sTimeDay.getValue();
-        int sYear = sTimeYear.getValue();
-        int sHour = sTimeHr.getValue();
-        int sMin = sTimeMin.getValue();
-        String sAMPM = sTimeAMPM.getValue();
-        //end time/date
 
-        int eHour = eTimeHr.getValue();
-        int eMin = eTimeMin.getValue();
-        String eAMPM = eTimeAMPM.getValue();
-        String newAppCustomerID = addAppointmentCustIDField.getText();
-        String newAppUserID = addAppointmentUserIDField.getText();
+        //Check if fields are blank
+        if (addAppointmentTitleField.getText().isBlank() || addAppointmentDescriptionField.getText().isBlank() || addAppointmentLocationField.getText().isBlank() ||
+                addAppointmentChoiceBox.getSelectionModel().isEmpty() || addAppointmentTypeField.getText().isBlank() || sTimeMonth.getSelectionModel().isEmpty() ||
+                sTimeDay.getSelectionModel().isEmpty() || sTimeYear.getSelectionModel().isEmpty() || sTimeHr.getSelectionModel().isEmpty() ||
+                sTimeMin.getSelectionModel().isEmpty() || sTimeAMPM.getSelectionModel().isEmpty() || eTimeHr.getSelectionModel().isEmpty() ||
+                eTimeAMPM.getSelectionModel().isEmpty() || addAppointmentCustIDField.getText().isBlank() || addAppointmentUserIDField.getText().isBlank()){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("ERROR");
+            a.setContentText("Please ensure all fields are filled");
+            a.showAndWait();
+        }
+        else{
+            String newAppID = addAppointmentAppIDField.getText();
+            String newAppTitle = addAppointmentTitleField.getText();
+            String newAppDescription = addAppointmentDescriptionField.getText();
+            String newAppLocation = addAppointmentLocationField.getText();
+            String newAppContact = addAppointmentChoiceBox.getValue();
+            String newAppType = addAppointmentTypeField.getText();
+            //Start time/date
+            int sMonth = sTimeMonth.getValue();
+            int sDay = sTimeDay.getValue();
+            int sYear = sTimeYear.getValue();
+            int sHour = sTimeHr.getValue();
+            int sMin = sTimeMin.getValue();
+            String sAMPM = sTimeAMPM.getValue();
+            //end time/date
 
-        LocalDateTime ldt = LocalDateTime.of(sYear,sMonth, sDay ,sHour, sMin);
-        LocalDateTime edt = LocalDateTime.of(sYear,sMonth,sDay,eHour, eMin);
-        System.out.println("ldt = " + ldt);
+            int eHour = eTimeHr.getValue();
+            int eMin = eTimeMin.getValue();
+            String eAMPM = eTimeAMPM.getValue();
+            String newAppCustomerID = addAppointmentCustIDField.getText();
+            String newAppUserID = addAppointmentUserIDField.getText();
 
-        Appointment a = new Appointment(newAppID, newAppTitle, newAppDescription, newAppLocation, newAppContact,
-                newAppType, ldt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), edt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                Integer.parseInt(newAppCustomerID), Integer.parseInt(newAppUserID));
+            //AM - PM add 12
+            if (sAMPM == "PM"){
+                sHour += 12;
+            }
+            else if (eAMPM == "PM"){
+                eHour += 12;
+            }
+
+            LocalDateTime ldt = LocalDateTime.of(sYear,sMonth, sDay ,sHour, sMin);
+            LocalDateTime edt = LocalDateTime.of(sYear,sMonth,sDay,eHour, eMin);
+            System.out.println("ldt = " + ldt);
+
+            //Check if time is within operating hours
+            LocalDateTime opHoursOpen = LocalDateTime.of(sYear,sMonth,sDay,8,0);
+            LocalDateTime opHoursClose = LocalDateTime.of(sYear,sMonth,sDay,22,0);
+
+            //if (ldt.getHour() < 8 || edt.getHour() > 22 || (edt.getHour() == 22 && edt.getMinute() > 0));
+            if (ldt.isBefore(opHoursOpen) || edt.isAfter(opHoursClose)){
+            System.out.println("Not within business hours");
+            }
+        }
+
+
+
+
+
+
+        //Appointment a = new Appointment(newAppID, newAppTitle, newAppDescription, newAppLocation, newAppContact,
+        //        newAppType, ldt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), edt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+        //        Integer.parseInt(newAppCustomerID), Integer.parseInt(newAppUserID));
 
         //Next task here: needs to be converted to UTC???
         //Also, needs to be added to database
@@ -133,8 +171,9 @@ public class AddAppointmentController implements Initializable {
         sTimeYear.getItems().addAll(2022);
         sTimeHr.getItems().addAll(8,9,10,11,12,1,2,3,4,5,6,7,8,9,10);
         sTimeMin.getItems().addAll(00, 15,30,45);
-
+        sTimeAMPM.getItems().addAll("AM", "PM");
         eTimeHr.getItems().addAll(8,9,10,11,12,1,2,3,4,5,6,7,8,9,10);
         eTimeMin.getItems().addAll(00, 15,30,45);
+        eTimeAMPM.getItems().addAll("AM", "PM");
     }
 }

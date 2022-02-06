@@ -21,6 +21,11 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class RecordOverviewController implements Initializable {
@@ -122,6 +127,7 @@ public class RecordOverviewController implements Initializable {
 
     //Add data to appointments table
     public void fillAppointmentTable(){
+
         try {
             //String sql = "SELECT * FROM appointments";
             String sql = "SELECT * from appointments JOIN contacts ON appointments.Contact_ID = contacts.Contact_ID";
@@ -130,10 +136,31 @@ public class RecordOverviewController implements Initializable {
             appointmentObsList.clear();
 
             while (rs.next()){
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String startUTCTime = rs.getString("Start");
+                String endUTCTime = rs.getString("End");
+                LocalDateTime startUTC = LocalDateTime.parse(startUTCTime,dtf);
+                LocalDateTime endUTC = LocalDateTime.parse(endUTCTime,dtf);
+
+                //ZonedDateTime zonedStartLDT = startUTC.atZone(ZoneId.systemDefault());
+                //ZonedDateTime zonedEndLDT = endUTC.atZone(ZoneId.systemDefault());
+                //TEST
+                ZonedDateTime BzonedStartLDT = startUTC.atZone(ZoneId.systemDefault());
+                ZonedDateTime BzonedEndLDT = endUTC.atZone(ZoneId.systemDefault());
+
+                ZonedDateTime zonedStartLDT = BzonedStartLDT.withZoneSameInstant(ZoneId.of("America/Los_Angeles"));
+                ZonedDateTime zonedEndLDT = BzonedEndLDT.withZoneSameInstant(ZoneId.of("America/Los_Angeles"));
+
+
+                System.out.println(startUTCTime);
+                System.out.println(endUTCTime);
+                System.out.println("zonedStartLDT: " + zonedStartLDT);
+                System.out.println("zonedEndLDT: " + zonedEndLDT);
+
                 appointmentObsList.add(new Appointment(rs.getString("Appointment_ID"), rs.getString("Title"),
                         rs.getString("Description"), rs.getString("Location"),
                         rs.getString("Contact_Name"), rs.getString("Type"),
-                        rs.getString("Start"), rs.getString("End"), rs.getInt("Customer_ID"),
+                        /*rs.getString("Start")*/zonedStartLDT.format(dtf), /*rs.getString("End")*/zonedEndLDT.format(dtf), rs.getInt("Customer_ID"),
                         rs.getInt("User_ID")));
             }
         }
