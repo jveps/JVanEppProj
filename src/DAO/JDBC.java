@@ -1,5 +1,6 @@
 package DAO;
 
+import Model.Appointment;
 import Model.Customer;
 import com.mysql.cj.protocol.Resultset;
 import com.mysql.cj.x.protobuf.MysqlxPrepare;
@@ -8,9 +9,7 @@ import javafx.collections.ObservableList;
 
 import javax.xml.transform.Result;
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public abstract class JDBC {
@@ -156,6 +155,40 @@ public abstract class JDBC {
         }
     }
 
+    //Add appointment to DB
+    public static boolean  addAppointment(Appointment a){
+        try{
+            ZonedDateTime zdt = LocalDateTime.now().atZone(ZoneOffset.UTC);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String createdDate= zdt.format(dtf);
+            String lastUpdate = zdt.format(dtf);
+
+
+            String contactSQL = String.format("SELECT Contact_ID from contacts where Contact_Name= '%s'", a.getContact());
+            PreparedStatement contactPS = getConnection().prepareStatement(contactSQL);
+            ResultSet rSet = contactPS.executeQuery();
+            rSet.next();
+            String contactID = rSet.getString("Contact_ID");
+            System.out.println("Contact ID: " + contactID);
+
+            String sql = String.format("UPDATE appointments SET Title= '%s', Description= '%s', Location= '%s'," +
+                    "Type= '%s', Start= '%s', End= '%s', Create_Date= '%s', Created_By= '%s', Last_Update= '%s', " +
+                    "Last_Updated_By= '%s', Customer_ID= '%s', User_ID= '%s', Contact_ID= '%s' WHERE Appointment_ID= '%s';", a.getTitle(),
+                    a.getDescription(), a.getLocation(), a.getType(), a.getStartDateTime(), a.getEndDateTime(), createdDate, "test", lastUpdate,
+                    "test", a.getCustomerId(), a.getUserId(), contactID, a.getAppointmentId());
+            System.out.println(sql);
+
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.executeUpdate();
+            return true;
+
+
+        }catch (SQLException throwables){
+            throwables.printStackTrace();
+            return false;
+        }
+    }
+
     //Gets next customer ID
     public static String getNextCustomerId(){
         try {
@@ -232,5 +265,55 @@ public abstract class JDBC {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean checkOverlappingAppointments(Appointment a){
+        boolean collide = false;
+        try{
+            String sql = String.format("SELECT Start, End from appointments WHERE Customer_ID = '%s'", a.getCustomerId());
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            LocalDateTime newAppStart = LocalDateTime.parse(a.getStartDateTime(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            LocalDateTime newAppEnd = LocalDateTime.parse(a.getEndDateTime(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+            while (rs.next()){
+                
+                LocalDateTime start = LocalDateTime.parse(rs.getString("Start"),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                LocalDateTime end = LocalDateTime.parse(rs.getString("End"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+                //Test
+                System.out.println("RS start: " + start);
+                System.out.println("RS end: " + end);
+
+                if (newAppStart.isAfter(start) || newAppStart.isEqual(start) && newAppStart.isBefore(end)){
+                    System.out.println("OVerlap occured condition 1");
+                    collide = true;
+                    return collide;
+                }
+
+                else if (newAppEnd.isAfter(start) && (newAppEnd.isBefore(end) || newAppEnd.isEqual(end))){
+                    System.out.println("Overlap occured condition 2");
+                    collide = true;
+                    return collide;
+                }
+
+                else if ((newAppStart.isBefore(start) || newAppStart.isEqual(start)) && (newAppEnd.isAfter(end) || newAppEnd.isEqual(end))){
+                    System.out.println("Overlap occured condition 3");
+                    collide = true;
+                    return collide;
+                }
+                else{
+                    collide = false;
+                }
+
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            collide = true;
+        }
+
+        return collide;
+
     }
 }

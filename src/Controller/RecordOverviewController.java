@@ -145,17 +145,12 @@ public class RecordOverviewController implements Initializable {
                 //ZonedDateTime zonedStartLDT = startUTC.atZone(ZoneId.systemDefault());
                 //ZonedDateTime zonedEndLDT = endUTC.atZone(ZoneId.systemDefault());
                 //TEST
-                ZonedDateTime BzonedStartLDT = startUTC.atZone(ZoneId.systemDefault());
-                ZonedDateTime BzonedEndLDT = endUTC.atZone(ZoneId.systemDefault());
+                ZonedDateTime bzonedStartLDT = startUTC.atZone(ZoneId.systemDefault());
+                ZonedDateTime bzonedEndLDT = endUTC.atZone(ZoneId.systemDefault());
 
-                ZonedDateTime zonedStartLDT = BzonedStartLDT.withZoneSameInstant(ZoneId.of("America/Los_Angeles"));
-                ZonedDateTime zonedEndLDT = BzonedEndLDT.withZoneSameInstant(ZoneId.of("America/Los_Angeles"));
+                ZonedDateTime zonedStartLDT = bzonedStartLDT.withZoneSameInstant(ZoneId.systemDefault());
+                ZonedDateTime zonedEndLDT = bzonedEndLDT.withZoneSameInstant(ZoneId.systemDefault());
 
-
-                System.out.println(startUTCTime);
-                System.out.println(endUTCTime);
-                System.out.println("zonedStartLDT: " + zonedStartLDT);
-                System.out.println("zonedEndLDT: " + zonedEndLDT);
 
                 appointmentObsList.add(new Appointment(rs.getString("Appointment_ID"), rs.getString("Title"),
                         rs.getString("Description"), rs.getString("Location"),

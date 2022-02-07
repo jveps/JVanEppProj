@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
@@ -90,7 +91,7 @@ public class AddAppointmentController implements Initializable {
     }
 
     @FXML
-    void addAppointmentOkButtonPressed(ActionEvent event) {
+    void addAppointmentOkButtonPressed(ActionEvent event) throws IOException {
 
         //Check if fields are blank
         if (addAppointmentTitleField.getText().isBlank() || addAppointmentDescriptionField.getText().isBlank() || addAppointmentLocationField.getText().isBlank() ||
@@ -126,16 +127,15 @@ public class AddAppointmentController implements Initializable {
             String newAppUserID = addAppointmentUserIDField.getText();
 
             //AM - PM add 12
-            if (sAMPM == "PM"){
+            if (sAMPM == "PM" && sHour != 12){
                 sHour += 12;
             }
-            else if (eAMPM == "PM"){
+            else if (eAMPM == "PM" && eHour != 12){
                 eHour += 12;
             }
 
             LocalDateTime ldt = LocalDateTime.of(sYear,sMonth, sDay ,sHour, sMin);
             LocalDateTime edt = LocalDateTime.of(sYear,sMonth,sDay,eHour, eMin);
-            System.out.println("ldt = " + ldt);
 
             //Check if time is within operating hours
             LocalDateTime opHoursOpen = LocalDateTime.of(sYear,sMonth,sDay,8,0);
@@ -143,7 +143,45 @@ public class AddAppointmentController implements Initializable {
 
             //if (ldt.getHour() < 8 || edt.getHour() > 22 || (edt.getHour() == 22 && edt.getMinute() > 0));
             if (ldt.isBefore(opHoursOpen) || edt.isAfter(opHoursClose)){
-            System.out.println("Not within business hours");
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("Error");
+                a.setContentText("Appointment is outside of business hours");
+                a.showAndWait();
+            }
+            else{
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String formLDT = ldt.atOffset(ZoneOffset.UTC).format(dtf);
+                String formEDT = edt.atOffset(ZoneOffset.UTC).format(dtf);
+                System.out.println("FORMLDT: " + formLDT);
+
+                Appointment a = new Appointment(newAppID, newAppTitle, newAppDescription, newAppLocation, newAppContact,
+                newAppType, formLDT, formEDT, Integer.parseInt(newAppCustomerID), Integer.parseInt(newAppUserID));
+
+                //check for overlapping appointments
+                if (!JDBC.checkOverlappingAppointments(a)){
+
+                    if(JDBC.addAppointment(a)){
+                        Stage stage;
+                        stage = (Stage)((Button)event.getSource()).getScene().getWindow();
+                        Parent scene = FXMLLoader.load(getClass().getResource("/View/RecordOverview.fxml"));
+                        stage.setScene(new Scene(scene));
+                        stage.show();
+                    }
+                    else{
+                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                        errorAlert.setTitle("Error");
+                        errorAlert.setContentText("Something went wrong");
+                        errorAlert.showAndWait();
+                    }
+                }
+                else{
+                    Alert overLapAlert = new Alert(Alert.AlertType.ERROR);
+                    overLapAlert.setTitle("Error");
+                    overLapAlert.setContentText("Overlapping appointment");
+                    overLapAlert.showAndWait();
+                }
+
+
             }
         }
 
@@ -152,9 +190,7 @@ public class AddAppointmentController implements Initializable {
 
 
 
-        //Appointment a = new Appointment(newAppID, newAppTitle, newAppDescription, newAppLocation, newAppContact,
-        //        newAppType, ldt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), edt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-        //        Integer.parseInt(newAppCustomerID), Integer.parseInt(newAppUserID));
+
 
         //Next task here: needs to be converted to UTC???
         //Also, needs to be added to database

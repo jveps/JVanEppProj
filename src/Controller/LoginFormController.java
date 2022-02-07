@@ -15,7 +15,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
@@ -94,8 +96,19 @@ public class LoginFormController implements Initializable {
         LocalDateTime ldt = LocalDateTime.now();
         ZonedDateTime zonedLDT = ldt.atZone(ZoneId.systemDefault());
         ZonedDateTime zonedEST = zonedLDT.withZoneSameInstant(ZoneId.of("America/New_York"));
-        System.out.println("DEFAULT: " + zonedLDT);
+
+
+        ZonedDateTime zdt = LocalDateTime.now().atZone(ZoneOffset.UTC);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String createdDate= zdt.format(dtf);
+        System.out.println("Created date: " + createdDate);
+        System.out.println("DEFAULT: " + zonedLDT.format(dtf));
         System.out.println("EST: " + zonedEST);
+        System.out.println("OFFSET: " + ldt.atOffset(ZoneOffset.UTC));
+
+        LocalDateTime sLDT = LocalDateTime.parse("2022-04-04 01:11:11",dtf);
+        System.out.println(sLDT.isAfter(ldt));
+        System.out.println("SLDT " + sLDT.toString());
 
     }
 
