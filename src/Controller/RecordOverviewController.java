@@ -225,8 +225,24 @@ public class RecordOverviewController implements Initializable {
     }
 
     @FXML
-    void modAppointmentButtonPressed(ActionEvent event) {
+    void modAppointmentButtonPressed(ActionEvent event) throws IOException {
+        if (AppointmentTable.getSelectionModel().getSelectedItem() == null) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("ERROR");
+            a.setContentText("Please select an appointment");
+            a.showAndWait();
+        }else{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/View/modifyAppointment.fxml"));
+            loader.load();
+            ModifyAppointmentController modAppCont = loader.getController();
+            modAppCont.sendAppointment(AppointmentTable.getSelectionModel().getSelectedItem());
 
+            stage = (Stage)((Button)event.getSource()).getScene().getWindow();
+            Parent scene = loader.getRoot();
+            stage.setScene(new Scene(scene));
+            stage.show();
+        }
     }
 
     @FXML
