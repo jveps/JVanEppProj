@@ -14,9 +14,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class ModifyAppointmentController implements Initializable {
@@ -94,7 +96,13 @@ public class ModifyAppointmentController implements Initializable {
         modAppointmentTypeField.setText(a.getType());
         LocalDateTime sLDT = LocalDateTime.parse(a.getStartDateTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         LocalDateTime eLDT = LocalDateTime.parse(a.getEndDateTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        //Date
+        //DateTest
+        System.out.println("A START: " + a.getStartDateTime());
+        LocalDateTime testLDT = LocalDateTime.parse(a.getEndDateTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+
+        System.out.println(" YO YOY YO YO :" + testLDT.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a")));
+
 
         sTimeMonth.setValue(sLDT.getMonthValue());
 
@@ -116,6 +124,18 @@ public class ModifyAppointmentController implements Initializable {
             sTimeAMPM.getSelectionModel().select("AM");
         }
         //end time
+        eTimeHr.setValue(eLDT.getHour());
+        System.out.println("ELDT HOUR: " + eLDT.getHour());
+        eTimeMin.setValue(eLDT.getMinute());
+
+        //Get AM or PM End time
+        if (eLDT.getHour() > 11){
+            eTimeAMPM.getSelectionModel().select("PM");
+        }
+        else{
+            eTimeAMPM.getSelectionModel().select("AM");
+        }
+
         modAppointmentCustIDField.setText(String.valueOf(a.getCustomerId()));
         modAppointmentUserIDField.setText(String.valueOf(a.getUserId()));
 
