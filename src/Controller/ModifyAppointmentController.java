@@ -7,17 +7,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.converter.LocalDateTimeStringConverter;
 
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -84,7 +86,83 @@ public class ModifyAppointmentController implements Initializable {
 
     @FXML
     void modAppointmentOkButtonPressed(ActionEvent event) {
+        if (modAppointmentTitleField.getText().isBlank() || modAppointmentDescriptionField.getText().isBlank() ||
+                modAppointmentLocationField.getText().isBlank() || modAppointmentChoiceBox.getSelectionModel().isEmpty() ||
+                modAppointmentTypeField.getText().isBlank() || sTimeMonth.getSelectionModel().isEmpty() ||
+                sTimeDay.getSelectionModel().isEmpty() || sTimeYear.getSelectionModel().isEmpty() ||
+                sTimeHr.getSelectionModel().isEmpty() || sTimeMin.getSelectionModel().isEmpty() ||
+                sTimeAMPM.getSelectionModel().isEmpty() || eTimeHr.getSelectionModel().isEmpty() ||
+                eTimeMin.getSelectionModel().isEmpty() || eTimeAMPM.getSelectionModel().isEmpty() ||
+                modAppointmentCustIDField.getText().isBlank() || modAppointmentUserIDField.getText().isBlank()){
 
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("ERROR");
+            a.setContentText("Please ensure all fields are filled");
+            a.showAndWait();
+        }else{
+            String modAppTitle = modAppointmentTitleField.getText();
+            String modAppDesc = modAppointmentDescriptionField.getText();
+            String modAppLoc = modAppointmentLocationField.getText();
+            String modAppContact = modAppointmentChoiceBox.getSelectionModel().getSelectedItem();
+            String modAppType = modAppointmentTypeField.getText();
+            //Start date
+            int sMonth = sTimeMonth.getValue();
+            int sDay = sTimeDay.getValue();
+            int sYear = sTimeYear.getValue();
+
+            //start time
+            int sHour = sTimeHr.getValue();
+            int sMin = sTimeMin.getValue();
+            String sAMPM = sTimeAMPM.getValue();
+
+            //end time
+            int eHour = eTimeHr.getValue();
+            int eMin = eTimeMin.getValue();
+            String eAMPM = eTimeAMPM.getValue();
+
+            String modAppCustID = modAppointmentCustIDField.getText();
+            String modAppUseID = modAppointmentUserIDField.getText();
+
+            //LocalTime startLT = LocalTime.parse(String.valueOf(sHour + ":" + String.valueOf(sMin + " " + sAMPM)), DateTimeFormatter.ofPattern("h:m a"));
+            //LocalTime endLT = LocalTime.parse(String.valueOf(eHour + ":" + String.valueOf(eMin) + " " + eAMPM), DateTimeFormatter.ofPattern("h:m a"));
+            LocalDateTime startLDT = LocalDateTime.parse(String.valueOf(sYear) + "-" + String.valueOf(sMonth) + "-" + String.valueOf(sDay) +
+                    " " + String.valueOf(sHour) + ":" + String.valueOf(sMin) + " " + sAMPM, DateTimeFormatter.ofPattern("yyyy-M-d h:m a"));
+
+            LocalDateTime endLDT = LocalDateTime.parse(String.valueOf(sYear) + "-" + String.valueOf(sMonth) + "-" + String.valueOf(sDay) +
+                    " " + String.valueOf(eHour) + ":" + String.valueOf(eMin) + " " + eAMPM, DateTimeFormatter.ofPattern("yyyy-M-d h:m a"));
+
+            LocalTime openEST = LocalTime.of(8,0);
+            LocalTime closeEST = LocalTime.of(22,0);
+            System.out.println("startLDT: " + startLDT.toString());
+            System.out.println("ENDLDT: " + endLDT);
+
+            ZonedDateTime startZDT = startLDT.atZone(ZoneId.systemDefault());
+            ZonedDateTime startZDTEST = startZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
+            ZonedDateTime endZDT = endLDT.atZone(ZoneId.systemDefault());
+            ZonedDateTime endZDTEST = endZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
+
+            System.out.println("STARTZDT: "+ startZDT.getZone() + startZDT.toString());
+            System.out.println("EST TIME: " + startZDTEST.getZone() + startZDTEST.toString());
+
+            LocalDateTime openLDT = LocalDateTime.of(sYear, sMonth, sDay, 8,0);
+            LocalDateTime closeLDT = LocalDateTime.of(sYear, sMonth, sDay, 22, 0);
+            if (startZDTEST.isBefore(openLDT.atZone(ZoneId.of("America/New_York"))) || endZDTEST.isAfter(closeLDT.atZone(ZoneId.of("America/New_York"))) ){
+                System.out.println("Scheduled start: " + startZDTEST.getHour() + ":" + startZDTEST.getMinute() + " Day"+startZDTEST.getDayOfMonth());
+                System.out.println("Scheduled end: " + endZDTEST.getHour() + ":" + endZDTEST.getMinute() + " Day" + endZDTEST.getDayOfMonth());
+                System.out.println("Store opens: " + openLDT.getHour() + ":" + openLDT.getMinute() +" Day: " +openLDT.getDayOfMonth());
+                System.out.println("Store closes: " + closeLDT.getHour() + ":" + closeLDT.getMinute() + " Day: " + closeLDT.getDayOfMonth());
+
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("Error");
+                a.setContentText("Appointment is outside of business hours");
+                a.showAndWait();
+
+            }
+
+
+
+
+        }
     }
 
     public void sendAppointment(Appointment a){
@@ -96,12 +174,14 @@ public class ModifyAppointmentController implements Initializable {
         modAppointmentTypeField.setText(a.getType());
         LocalDateTime sLDT = LocalDateTime.parse(a.getStartDateTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         LocalDateTime eLDT = LocalDateTime.parse(a.getEndDateTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        System.out.println(a.getStartDateTime());
         //DateTest
-        System.out.println("A START: " + a.getStartDateTime());
-        LocalDateTime testLDT = LocalDateTime.parse(a.getEndDateTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
+        LocalTime sLDT12 = LocalTime.parse(sLDT.format(DateTimeFormatter.ofPattern("hh:mm:ss")));
+        LocalTime eLDT12 = LocalTime.parse(eLDT.format(DateTimeFormatter.ofPattern("hh:mm:ss")));
 
-        System.out.println(" YO YOY YO YO :" + testLDT.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a")));
+        String sLDT12Hour = sLDT.format(DateTimeFormatter.ofPattern("hh:mm:ss a"));
+        String eLDT12Hour = eLDT.format(DateTimeFormatter.ofPattern("hh:mm:ss a"));
 
 
         sTimeMonth.setValue(sLDT.getMonthValue());
@@ -113,28 +193,32 @@ public class ModifyAppointmentController implements Initializable {
         sTimeYear.setValue(sLDT.getYear());
         //Start time
         //sTimeHr.getSelectionModel().select(sLDT.getHour());
-        sTimeHr.setValue(sLDT.getHour());
+        sTimeHr.setValue(sLDT12.getHour());
         //sTimeMin.getSelectionModel().select(sLDT.getMinute());
         sTimeMin.setValue(sLDT.getMinute());
         //Get AM or PM
-        if (sLDT.getHour() > 11){
+
+        if (sLDT12Hour.contains("AM")){
+            sTimeAMPM.getSelectionModel().select("AM");
+
+        }
+        else if (sLDT12Hour.contains("PM")){
             sTimeAMPM.getSelectionModel().select("PM");
         }
-        else{
-            sTimeAMPM.getSelectionModel().select("AM");
-        }
         //end time
-        eTimeHr.setValue(eLDT.getHour());
-        System.out.println("ELDT HOUR: " + eLDT.getHour());
+        eTimeHr.setValue(eLDT12.getHour());
+
+        System.out.println("ELDT HOUR: " + eLDT12.getHour());
         eTimeMin.setValue(eLDT.getMinute());
 
         //Get AM or PM End time
-        if (eLDT.getHour() > 11){
+        if (eLDT12Hour.contains("PM")){
             eTimeAMPM.getSelectionModel().select("PM");
         }
-        else{
+        else if (eLDT12Hour.contains("AM")){
             eTimeAMPM.getSelectionModel().select("AM");
         }
+
 
         modAppointmentCustIDField.setText(String.valueOf(a.getCustomerId()));
         modAppointmentUserIDField.setText(String.valueOf(a.getUserId()));
