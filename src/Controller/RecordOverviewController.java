@@ -315,8 +315,11 @@ public class RecordOverviewController implements Initializable {
 
 
     @FXML
-    void reportsButtonPressed(ActionEvent event) {
-
+    void reportsButtonPressed(ActionEvent event) throws IOException {
+        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        Parent scene = FXMLLoader.load(getClass().getResource("/View/additionalReports.fxml"));
+        stage.setScene(new Scene(scene));
+        stage.show();
     }
 
     @FXML

@@ -350,4 +350,30 @@ public abstract class JDBC {
         }
         return false;
     }
+
+    public static ObservableList<String> getAppointmentTypes() throws SQLException {
+        String sql = "SELECT * FROM appointments;";
+        PreparedStatement ps = getConnection().prepareStatement(sql);
+        ResultSet typesRS = ps.executeQuery();
+        ObservableList<String> typesOL = FXCollections.observableArrayList();
+        String returnedType;
+        while (typesRS.next()){
+            returnedType = typesRS.getString("Type");
+            if (!typesOL.contains(returnedType)){
+                typesOL.add(returnedType);
+            }
+        }
+        return typesOL;
+    }
+
+    public static int getAmountOfType(String m, String t) throws SQLException {
+        //String sql = String.format("SELECT COUNT(Appointment_ID) as COUNT FROM appointments WHERE Start LIKE '%-%%s-%' and Type = '%s';", m,t);
+        String sql = "SELECT COUNT(Appointment_ID) as COUNT FROM appointments WHERE Start LIKE '%-%" + m + "-%' and TYPE = '" + t + "';";
+        System.out.println("SQL FOR AMOUNT: "+ sql);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
+        ResultSet countRS = ps.executeQuery();
+        countRS.next();
+        int returnedCount = countRS.getInt("COUNT");
+        return returnedCount;
+    }
 }
