@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -51,12 +52,18 @@ public class LoginFormController implements Initializable {
     Stage stage;
 
     @FXML
-    void onActionOkButton(ActionEvent event) throws IOException {
+    void onActionOkButton(ActionEvent event) throws IOException, SQLException {
         String uName = loginUsernameField.getText();
         String pWord = loginPasswordField.getText();
         if (JDBC.loginTest(uName,pWord)){
             System.out.println("CORRECT PASSWORD");
 
+            if (JDBC.checkFifteenMins()){
+                Alert _15MinAlert = new Alert(Alert.AlertType.INFORMATION);
+                _15MinAlert.setTitle("IMPORTANT");
+                _15MinAlert.setContentText("Appointment within 15 minutes");
+                _15MinAlert.showAndWait();
+            }
             //Open RecordOverview screen
             stage = (Stage)((Button)event.getSource()).getScene().getWindow();
             Parent scene = FXMLLoader.load(getClass().getResource("/View/RecordOverview.fxml"));

@@ -322,15 +322,24 @@ public class RecordOverviewController implements Initializable {
     @FXML
     void weeklyAppointmentsSelected(ActionEvent event) {
         System.out.println("Weekly reports pressed");
+        ObservableList<Appointment> currWeekApptsObsList = FXCollections.observableArrayList();
+        LocalDateTime currDate = LocalDateTime.now();
+
         appointmentObsList.forEach(currWeek -> {
+            LocalDateTime currMonthAppts = LocalDateTime.parse(currWeek.getStartDateTime(), DateTimeFormatter.ofPattern("yyyy-M-d H:m:s"));
+            System.out.println(currMonthAppts.format(DateTimeFormatter.ofPattern("yyyy-M-d")));
+            if (currMonthAppts.isAfter(currDate) && currMonthAppts.isBefore(currDate.plusWeeks(1))){
+                System.out.println("Weekly appt found");
+                currWeekApptsObsList.add(currWeek);
+            }
 
-    });
-
+        });
+        AppointmentTable.setItems(currWeekApptsObsList);
     }
 
     @FXML
     void allAppointmentsSelected(ActionEvent event) {
-        System.out.println("All appointments selected");
+        fillAppointmentTable();
     }
 
     @FXML

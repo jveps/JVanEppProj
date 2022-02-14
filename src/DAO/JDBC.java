@@ -325,17 +325,29 @@ public abstract class JDBC {
 
     }
 
-    public static ObservableList getCurrMonthAppointments(int year, int month) throws SQLException {
-        ObservableList<Appointment> currMonthAppointmentList = null;
-        //String sql = String.format("select * from appointments where Date LIKE '%i-%i-%'", year, month);
-
-        String sql = "SELECT * from appointments JOIN contacts ON appointments.Contact_ID = contacts.Contact_ID WHERE Start LIKE '" +
-                String.valueOf(year) + "-" + String.valueOf(month + "-%';");
-        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+    public static boolean checkFifteenMins() throws SQLException {
+        System.out.println("Checking if there is an appointment within 15 minutes");
+        String sql = "select * from appointments;";
+        ZonedDateTime zdt = Instant.now().atZone(ZoneId.of("America/New_York"));
+        LocalDateTime ldtEST = zdt.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
+        System.out.println("LDTEST " + ldtEST.toString());
+        PreparedStatement ps = getConnection().prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
-        System.out.println("Monthly Query: " + sql);
+        while (rs.next()){
+            String returnedTimes = rs.getString("Start");
+
+            LocalDateTime returnedTimesLDT = LocalDateTime.parse(returnedTimes, DateTimeFormatter.ofPattern("yyyy-M-d H:m:s"));
+            System.out.println("Confirmation 15 mins parsing correctly: " + returnedTimesLDT.toString());
+            if (returnedTimesLDT.isAfter(ldtEST) && returnedTimesLDT.isBefore(ldtEST.plusMinutes(15))){
+                System.out.println("Appointment found. RETURNED TIME: " + returnedTimesLDT.toString());
+                return true;
+            }else{
+                System.out.println("No appointments within 15 mins");
 
 
-        return currMonthAppointmentList;
+
+            }
+        }
+        return false;
     }
 }
