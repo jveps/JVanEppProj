@@ -42,5 +42,6 @@
       <Button layoutX="450.0" layoutY="599.0" mnemonicParsing="false" onAction="#modifyCustomerButtonPressed" text="Modify" />
       <Button layoutX="562.0" layoutY="599.0" mnemonicParsing="false" onAction="#deleteCustomerButtonPressed" text="Delete" />
       <Button id="quitButton" fx:id="quitButton" layoutX="774.0" layoutY="599.0" mnemonicParsing="false" onAction="#quitButtonPressed" text="Quit Application" />
+      <Button layoutX="613.0" layoutY="275.0" mnemonicParsing="false" onAction="#reportsButtonPressed" text="Reports" />
    </children>
 </AnchorPane>

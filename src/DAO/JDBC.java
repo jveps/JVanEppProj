@@ -257,13 +257,15 @@ public abstract class JDBC {
         }
     }
 
-    public static void deleteAppointment(String id){
+    public static boolean deleteAppointment(String id){
         try{
             String sql = "DELETE FROM appointments WHERE Appointment_ID='" + id + "';";
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ps.executeUpdate();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 

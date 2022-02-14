@@ -268,6 +268,42 @@ public class RecordOverviewController implements Initializable {
 
     @FXML
     void delAppointmentButtonPressed(ActionEvent event) {
+        if (AppointmentTable.getSelectionModel().getSelectedItem() == null) {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("ERROR");
+            a.setContentText("Please select a appointment");
+            a.showAndWait();
+
+        } else {
+            Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+            a.setTitle("Alert");
+            a.setContentText("Are you sure you want to delete this appointment?");
+            a.showAndWait();
+
+            if (a.getResult() == ButtonType.OK) {
+                String s = AppointmentTable.getSelectionModel().getSelectedItem().getAppointmentId();
+                String delType = AppointmentTable.getSelectionModel().getSelectedItem().getType();
+                if (JDBC.deleteAppointment(s)) {
+                    fillAppointmentTable();
+
+                    Alert deletedAppAlert = new Alert(Alert.AlertType.INFORMATION);
+                    deletedAppAlert.setTitle("Deleted Appointment Information");
+                    a.setContentText(String.format("Deleted AppointmentID: %s, Deleted Appointment Type: %s", s, delType));
+                    deletedAppAlert.showAndWait();
+
+                }else{
+                    Alert deletedAppFail = new Alert(Alert.AlertType.ERROR);
+                    deletedAppFail.setTitle("ERROR");
+                    deletedAppFail.setContentText("Something went wrong");
+                    deletedAppFail.showAndWait();
+                }
+            }
+        }
+    }
+
+
+    @FXML
+    void reportsButtonPressed(ActionEvent event) {
 
     }
 
