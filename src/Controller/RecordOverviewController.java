@@ -99,6 +99,17 @@ public class RecordOverviewController implements Initializable {
     //Observable list for appointments table
     private ObservableList<Appointment> appointmentObsList = FXCollections.observableArrayList();
 
+    @FXML
+    private RadioButton allRadioButton;
+
+    @FXML
+    private RadioButton weeklyRadioButton;
+
+    @FXML
+    private RadioButton monthlyRadioButton;
+
+    ToggleGroup tg = new ToggleGroup();
+
     Scene scene;
     Stage stage;
 
@@ -113,7 +124,7 @@ public class RecordOverviewController implements Initializable {
             while (rs.next()){
 
                 customerObsList.add(new Customer(rs.getInt("Customer_ID"), rs.getString("Customer_Name"),rs.getString("Address"),rs.getString("Country"),rs.getString("Division"),rs.getString("Postal_Code"),rs.getString("Phone")));
-                System.out.println("Country and Divs: " + rs.getString("Country") + rs.getString("Division"));
+                //System.out.println("Country and Divs: " + rs.getString("Country") + rs.getString("Division"));
             }
         }
 
@@ -261,6 +272,7 @@ public class RecordOverviewController implements Initializable {
                 String s = Integer.toString(CustomerTable.getSelectionModel().getSelectedItem().getId());
                 JDBC.deleteCustomer(s);
                 fillCustomerTable();
+                fillAppointmentTable();
 
             }
         }
@@ -288,7 +300,7 @@ public class RecordOverviewController implements Initializable {
 
                     Alert deletedAppAlert = new Alert(Alert.AlertType.INFORMATION);
                     deletedAppAlert.setTitle("Deleted Appointment Information");
-                    a.setContentText(String.format("Deleted AppointmentID: %s, Deleted Appointment Type: %s", s, delType));
+                    deletedAppAlert.setContentText(String.format("Deleted AppointmentID: %s, Deleted Appointment Type: %s", s, delType));
                     deletedAppAlert.showAndWait();
 
                 }else{
@@ -304,6 +316,42 @@ public class RecordOverviewController implements Initializable {
 
     @FXML
     void reportsButtonPressed(ActionEvent event) {
+
+    }
+
+    @FXML
+    void weeklyAppointmentsSelected(ActionEvent event) {
+        System.out.println("Weekly reports pressed");
+        appointmentObsList.forEach(currWeek -> {
+
+    });
+
+    }
+
+    @FXML
+    void allAppointmentsSelected(ActionEvent event) {
+        System.out.println("All appointments selected");
+    }
+
+    @FXML
+    void monthlyAppointmentsSelected(ActionEvent event) throws SQLException {
+        System.out.println("Monthly appts selected");
+        LocalDateTime currDate = LocalDateTime.now();
+        ObservableList<Appointment> currMonthApptsObsList = FXCollections.observableArrayList();
+
+        //JDBC.getCurrMonthAppointments(currDate.getYear(), currDate.getMonthValue());
+
+        appointmentObsList.forEach(dayTime -> {
+            LocalDateTime currMonthAppts = LocalDateTime.parse(dayTime.getStartDateTime(), DateTimeFormatter.ofPattern("yyyy-M-d H:m:s"));
+            System.out.println(currMonthAppts.format(DateTimeFormatter.ofPattern("yyyy-M-d")));
+            if (currDate.getMonthValue() == currMonthAppts.getMonthValue()){
+
+                currMonthApptsObsList.add(dayTime);
+            }
+
+        });
+
+        AppointmentTable.setItems(currMonthApptsObsList);
 
     }
 
@@ -334,6 +382,13 @@ public class RecordOverviewController implements Initializable {
 
         fillCustomerTable();
         fillAppointmentTable();
+
+        //Add radio buttons to toggle group
+        allRadioButton.setToggleGroup(tg);
+        weeklyRadioButton.setToggleGroup(tg);
+        monthlyRadioButton.setToggleGroup(tg);
+        allRadioButton.setSelected(true);
+        allRadioButton.requestFocus();
 
 
 

@@ -248,6 +248,11 @@ public abstract class JDBC {
 
     public static void deleteCustomer(String id){
         try {
+
+            String delApptsSQL = String.format("DELETE FROM appointments where Customer_ID= '%s'", id);
+            PreparedStatement delAppPS = getConnection().prepareStatement(delApptsSQL);
+            delAppPS.executeUpdate();
+
             String sql = "DELETE FROM customers WHERE Customer_ID='" + id + "';";
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ps.executeUpdate();
@@ -287,7 +292,8 @@ public abstract class JDBC {
                 System.out.println("RS start: " + start);
                 System.out.println("RS end: " + end);
 
-                if (newAppStart.isAfter(start) || newAppStart.isEqual(start) && newAppStart.isBefore(end)){
+
+                if ((newAppStart.isAfter(start) || newAppStart.isEqual(start)) && newAppStart.isBefore(end)){
                     System.out.println("OVerlap occured condition 1");
                     collide = true;
                     return collide;
@@ -317,5 +323,19 @@ public abstract class JDBC {
 
         return collide;
 
+    }
+
+    public static ObservableList getCurrMonthAppointments(int year, int month) throws SQLException {
+        ObservableList<Appointment> currMonthAppointmentList = null;
+        //String sql = String.format("select * from appointments where Date LIKE '%i-%i-%'", year, month);
+
+        String sql = "SELECT * from appointments JOIN contacts ON appointments.Contact_ID = contacts.Contact_ID WHERE Start LIKE '" +
+                String.valueOf(year) + "-" + String.valueOf(month + "-%';");
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        System.out.println("Monthly Query: " + sql);
+
+
+        return currMonthAppointmentList;
     }
 }

@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -43,5 +44,8 @@
       <Button layoutX="562.0" layoutY="599.0" mnemonicParsing="false" onAction="#deleteCustomerButtonPressed" text="Delete" />
       <Button id="quitButton" fx:id="quitButton" layoutX="774.0" layoutY="599.0" mnemonicParsing="false" onAction="#quitButtonPressed" text="Quit Application" />
       <Button layoutX="613.0" layoutY="275.0" mnemonicParsing="false" onAction="#reportsButtonPressed" text="Reports" />
+      <RadioButton fx:id="allRadioButton" layoutX="32.0" layoutY="267.0" mnemonicParsing="false" onAction="#allAppointmentsSelected" text="All Appointments" />
+      <RadioButton fx:id="weeklyRadioButton" layoutX="32.0" layoutY="292.0" mnemonicParsing="false" onAction="#weeklyAppointmentsSelected" text="Weekly" />
+      <RadioButton fx:id="monthlyRadioButton" layoutX="32.0" layoutY="320.0" mnemonicParsing="false" onAction="#monthlyAppointmentsSelected" text="Monthly" />
    </children>
 </AnchorPane>
