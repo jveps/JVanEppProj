@@ -376,4 +376,26 @@ public abstract class JDBC {
         int returnedCount = countRS.getInt("COUNT");
         return returnedCount;
     }
+
+    public static ObservableList getContacts() throws SQLException {
+        ObservableList contactOL = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM contacts where Contact_ID NOT LIKE '999';";
+        PreparedStatement ps = getConnection().prepareStatement(sql);
+        ResultSet contacttRS = ps.executeQuery();
+        while (contacttRS.next()){
+            contactOL.add(contacttRS.getString("Contact_Name"));
+        }
+        return contactOL;
+    }
+
+    public static ObservableList getContactAppointments(String contactName) throws SQLException {
+        ObservableList contactAppointmentsOL = FXCollections.observableArrayList();
+        String sql = String.format("SELECT * FROM appointments JOIN contacts ON appointments.Contact_ID = contacts.Contact_ID WHERE Contact_Name='%s';", contactName);
+        PreparedStatement ps = getConnection().prepareStatement(sql);
+        ResultSet contactAppointmentsRS = ps.executeQuery();
+        while (contactAppointmentsRS.next()) {
+            contactAppointmentsOL.add(contactAppointmentsOL);
+        }
+        return contactAppointmentsOL;
+    }
 }
