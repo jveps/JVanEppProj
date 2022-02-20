@@ -4,6 +4,7 @@ import Model.Appointment;
 import Model.Customer;
 import com.mysql.cj.protocol.Resultset;
 import com.mysql.cj.x.protobuf.MysqlxPrepare;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -389,13 +390,33 @@ public abstract class JDBC {
     }
 
     public static ObservableList getContactAppointments(String contactName) throws SQLException {
-        ObservableList contactAppointmentsOL = FXCollections.observableArrayList();
+        ObservableList<Appointment> contactAppointmentsOL = FXCollections.observableArrayList();
+        //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String sql = String.format("SELECT * FROM appointments JOIN contacts ON appointments.Contact_ID = contacts.Contact_ID WHERE Contact_Name='%s';", contactName);
         PreparedStatement ps = getConnection().prepareStatement(sql);
-        ResultSet contactAppointmentsRS = ps.executeQuery();
-        while (contactAppointmentsRS.next()) {
-            contactAppointmentsOL.add(contactAppointmentsOL);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Appointment a = new Appointment(rs.getString("Appointment_ID"), rs.getString("Title"),
+                        rs.getString("Description"), rs.getString("Location"),
+                        rs.getString("Contact_Name"), rs.getString("Type"),
+                        rs.getString("Start"), rs.getString("End"), rs.getInt("Customer_ID"),
+                        rs.getInt("User_ID"));
+            contactAppointmentsOL.add(a);
         }
         return contactAppointmentsOL;
+    }
+
+    public static String getYearlyContactCount(String year, String contact) throws SQLException {
+        String sql = "select COUNT(Appointment_ID) as COUNT from appointments JOIN contacts on appointments.Contact_ID = contacts.Contact_ID where Contact_Name='" + contact +
+                "' and Start LIKE '" + year + "-%-%';";
+        PreparedStatement ps = getConnection().prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        String yearlyCount = "0";
+        while (rs.next()){
+            yearlyCount = rs.getString("COUNT");
+
+        }
+        return yearlyCount;
     }
 }

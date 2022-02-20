@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -58,7 +59,17 @@ public class AdditionalReportsController implements Initializable {
     @FXML
     private ComboBox<String> contactComboBox;
 
+    @FXML
+    private ComboBox<String> byYearContactCB;
+
+    @FXML
+    private TextField byYearTextField;
+
+    @FXML
+    private TextField yearInputField;
+
     private ObservableList<Appointment> contactAppointmentsOL = FXCollections.observableArrayList();
+    private ObservableList<Appointment> contactAppointmentsByYear = FXCollections.observableArrayList();
 
     @FXML
     void searchReportsButtonPressed(ActionEvent event) throws SQLException {
@@ -79,7 +90,15 @@ public class AdditionalReportsController implements Initializable {
     @FXML
     void contactSelected(ActionEvent event) throws SQLException {
         contactAppointmentsOL = JDBC.getContactAppointments(contactComboBox.getValue());
-        System.out.println("Contact Appointments: " + contactAppointmentsOL.toString());
+        contactScheduleTableView.setItems(contactAppointmentsOL);
+        appointmentIdCol.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
+        appointmentTitleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+        appointmentDescrCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+        appointmentContactCol.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        appointmentTypeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
+        appointmentStartCol.setCellValueFactory(new PropertyValueFactory<>("startDateTime"));
+        appointmentEndCol.setCellValueFactory(new PropertyValueFactory<>("endDateTime"));
+        appointmentCustIdCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
     }
 
     @FXML
@@ -91,15 +110,39 @@ public class AdditionalReportsController implements Initializable {
         stage.show();
     }
 
+    @FXML
+    void totalByYearButtonPressed(ActionEvent event) throws SQLException {
+        if (yearInputField.getText().isBlank() || (!isNumeral(yearInputField.getText()) || yearInputField.getText().trim().length() != 4)){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("ERROR");
+            a.setContentText("Please input a valid year");
+            a.showAndWait();
+        }else{
+            byYearTextField.setText(JDBC.getYearlyContactCount(yearInputField.getText(), byYearContactCB.getSelectionModel().getSelectedItem()));
+        }
+
+    }
+
+    public static boolean isNumeral(String n){
+        try {
+            Double.parseDouble(n);
+            return true;
+        }catch (NumberFormatException error) {
+            return false;
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         reportsTotalField.setEditable(false);
+        byYearTextField.setEditable(false);
         reportsMonthBox.getItems().addAll("1","2","3","4","5","6","7","8","9","10","11","12");
 
 
         try {
             reportsTypeBox.setItems(JDBC.getAppointmentTypes());
             contactComboBox.setItems(JDBC.getContacts());
+            byYearContactCB.setItems(JDBC.getContacts());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

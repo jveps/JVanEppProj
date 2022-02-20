@@ -32,5 +32,12 @@
         </columns>
       </TableView>
       <ComboBox fx:id="contactComboBox" layoutX="15.0" layoutY="345.0" onAction="#contactSelected" prefWidth="150.0" />
+      <Label layoutX="70.0" layoutY="397.0" text="Year" />
+      <ComboBox fx:id="byYearContactCB" layoutX="219.0" layoutY="432.0" prefWidth="150.0" />
+      <Label layoutX="280.0" layoutY="397.0" text="Contact" />
+      <TextField fx:id="byYearTextField" layoutX="401.0" layoutY="432.0" />
+      <Label layoutX="441.0" layoutY="397.0" text="Total by year" />
+      <Button layoutX="576.0" layoutY="432.0" mnemonicParsing="false" onAction="#totalByYearButtonPressed" text="Search" />
+      <TextField fx:id="yearInputField" layoutX="20.0" layoutY="432.0" />
    </children>
 </AnchorPane>
