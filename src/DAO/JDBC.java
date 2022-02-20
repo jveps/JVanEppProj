@@ -2,6 +2,7 @@ package DAO;
 
 import Model.Appointment;
 import Model.Customer;
+import Model.User;
 import com.mysql.cj.protocol.Resultset;
 import com.mysql.cj.x.protobuf.MysqlxPrepare;
 import javafx.beans.Observable;
@@ -132,8 +133,8 @@ public abstract class JDBC {
             String createdDate = currTime.format(dtf).toString();
 
             //Testing data is currently present. divId variable is always set to 1.
-            String createdBy = "test";
-            String updatedBy = "test";
+            String createdBy = User.getUsername();
+            String updatedBy = User.getUsername();
             //String divId = "1";
             String lastUpdate = createdDate;
             /*String sql = "INSERT INTO customers (Customer_Name, Address," +
@@ -179,8 +180,8 @@ public abstract class JDBC {
             String sql = String.format("UPDATE appointments SET Title= '%s', Description= '%s', Location= '%s'," +
                     "Type= '%s', Start= '%s', End= '%s', Create_Date= '%s', Created_By= '%s', Last_Update= '%s', " +
                     "Last_Updated_By= '%s', Customer_ID= '%s', User_ID= '%s', Contact_ID= '%s' WHERE Appointment_ID= '%s';", a.getTitle(),
-                    a.getDescription(), a.getLocation(), a.getType(), a.getStartDateTime(), a.getEndDateTime(), createdDate, "test", lastUpdate,
-                    "test", a.getCustomerId(), a.getUserId(), contactID, a.getAppointmentId());
+                    a.getDescription(), a.getLocation(), a.getType(), a.getStartDateTime(), a.getEndDateTime(), createdDate, User.getUsername(), lastUpdate,
+                    User.getUsername(), a.getCustomerId(), a.getUserId(), contactID, a.getAppointmentId());
             System.out.println(sql);
 
             PreparedStatement ps = getConnection().prepareStatement(sql);
@@ -243,7 +244,7 @@ public abstract class JDBC {
     //Creates a temp appointment to be modified when a new appointment is added
     public static void createTempAppointment(){
         try{
-            String sql = "insert into appointments (Title, Customer_ID, User_ID, Contact_ID) values ('temp appointment', '1', '1', '999')";
+            String sql = "insert into appointments (Title, Customer_ID, User_ID, Contact_ID) values ('temp appointment', '1', '" + User.getID() +"', '999')";
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ps.executeUpdate();
         } catch (Exception e) {
@@ -422,5 +423,17 @@ public abstract class JDBC {
 
         }
         return yearlyCount;
+    }
+
+    public static String getCurrentUserID(String name) throws SQLException {
+        String sql = "SELECT User_ID FROM users WHERE User_Name='" + name + "';";
+        PreparedStatement ps = getConnection().prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        String id = "";
+        while (rs.next()){
+            id = rs.getString("User_ID");
+        }
+        
+        return id;
     }
 }

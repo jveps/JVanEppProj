@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -60,6 +61,8 @@ public class LoginFormController implements Initializable {
         if (JDBC.loginTest(uName,pWord)){
             attemptLogger(uName, true);
             System.out.println("CORRECT PASSWORD");
+            User currentUser = new User(uName, JDBC.getCurrentUserID(uName));
+            System.out.println("The current user is: " + currentUser.getUsername());
 
             if (JDBC.checkFifteenMins()){
                 Alert _15MinAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -95,6 +98,7 @@ public class LoginFormController implements Initializable {
         PrintWriter output = new PrintWriter(fwriter);
         if (successful){
             output.println(uName + " logged in successfully at " + zdt.format(dtf));
+
         }
         else{
             output.println(uName + " tried unsuccessfully to log in at " + zdt.format(dtf));

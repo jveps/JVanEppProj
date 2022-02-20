@@ -3,6 +3,7 @@ package Controller;
 import DAO.JDBC;
 import Model.Appointment;
 import Model.Customer;
+import Model.User;
 import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -112,6 +113,8 @@ public class RecordOverviewController implements Initializable {
 
     Scene scene;
     Stage stage;
+
+
 
     public void fillCustomerTable(){
         try {
@@ -369,6 +372,10 @@ public class RecordOverviewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //Testing User
+        System.out.println("Record overview starting");
+        System.out.println("Current user is: " + User.getUsername());
+
         //Test populate customer table
         CustomerTable.setItems(customerObsList);
         customerIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
