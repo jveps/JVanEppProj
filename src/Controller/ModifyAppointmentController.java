@@ -1,5 +1,6 @@
 package Controller;
 
+import DAO.JDBC;
 import Model.Appointment;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -75,6 +76,8 @@ public class ModifyAppointmentController implements Initializable {
     @FXML
     private ChoiceBox<Integer> sTimeYear;
 
+    private Appointment modifiedAppointment;
+
     @FXML
     void modAppointmentCancelButtonPressed(ActionEvent event) throws IOException {
         Stage stage;
@@ -85,7 +88,7 @@ public class ModifyAppointmentController implements Initializable {
     }
 
     @FXML
-    void modAppointmentOkButtonPressed(ActionEvent event) {
+    void modAppointmentOkButtonPressed(ActionEvent event) throws IOException {
         if (modAppointmentTitleField.getText().isBlank() || modAppointmentDescriptionField.getText().isBlank() ||
                 modAppointmentLocationField.getText().isBlank() || modAppointmentChoiceBox.getSelectionModel().isEmpty() ||
                 modAppointmentTypeField.getText().isBlank() || sTimeMonth.getSelectionModel().isEmpty() ||
@@ -100,6 +103,7 @@ public class ModifyAppointmentController implements Initializable {
             a.setContentText("Please ensure all fields are filled");
             a.showAndWait();
         }else{
+            String modAppID = modAppointmentAppIDField.getText();
             String modAppTitle = modAppointmentTitleField.getText();
             String modAppDesc = modAppointmentDescriptionField.getText();
             String modAppLoc = modAppointmentLocationField.getText();
@@ -157,6 +161,26 @@ public class ModifyAppointmentController implements Initializable {
                 a.setContentText("Appointment is outside of business hours");
                 a.showAndWait();
 
+            } else{
+
+                Appointment tempAppointment = new Appointment(modAppID, modAppTitle, modAppDesc, modAppLoc, modAppContact,
+                        modAppType, startLDT.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), endLDT.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                        Integer.parseInt(modAppCustID), Integer.parseInt(modAppUseID));
+                if (JDBC.checkOverlappingAppointments(tempAppointment)){
+                    Alert overlapError = new Alert (Alert.AlertType.ERROR);
+                    overlapError.setTitle("ERRROR");
+                    overlapError.setContentText("Overlapping appointment");
+                    overlapError.showAndWait();
+                }else{
+                    modifiedAppointment = tempAppointment;
+                    JDBC.addAppointment(modifiedAppointment);
+
+                    Stage stage = (Stage)((Button)event.getSource()).getScene().getWindow();
+                    Parent scene = FXMLLoader.load(getClass().getResource("/View/RecordOverview.fxml"));
+                    stage.setScene(new Scene(scene));
+                    stage.show();
+                }
+
             }
 
 
@@ -166,6 +190,7 @@ public class ModifyAppointmentController implements Initializable {
     }
 
     public void sendAppointment(Appointment a){
+        modifiedAppointment = a;
         modAppointmentAppIDField.setText(a.getAppointmentId());
         modAppointmentTitleField.setText(a.getTitle());
         modAppointmentDescriptionField.setText(a.getDescription());
