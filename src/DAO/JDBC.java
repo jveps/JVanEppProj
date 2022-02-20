@@ -61,22 +61,26 @@ public abstract class JDBC {
             String sql = "SELECT Password FROM users WHERE user_name = '" + name + "'";
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ResultSet rSet = ps.executeQuery();
-            rSet.next();
-
-
-            if (rSet.getString("Password").equals(pass)){
+            while (rSet.next()){
+                if (rSet.getString("Password").equals(pass)){
 
                 return true;
+                }
+
+                else{
+                    return false;
+                }
             }
 
-            else{
-                return false;
-            }
+
+
         }
         catch(SQLException e){
             e.printStackTrace();
             return false;
         }
+        return false;
+
 
     }
 

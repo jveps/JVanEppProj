@@ -11,7 +11,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -56,6 +58,7 @@ public class LoginFormController implements Initializable {
         String uName = loginUsernameField.getText();
         String pWord = loginPasswordField.getText();
         if (JDBC.loginTest(uName,pWord)){
+            attemptLogger(uName, true);
             System.out.println("CORRECT PASSWORD");
 
             if (JDBC.checkFifteenMins()){
@@ -72,6 +75,7 @@ public class LoginFormController implements Initializable {
         }
         else{
             //Show error in appropriate language for incorrect username or password
+            attemptLogger(uName, false);
             ResourceBundle rb = ResourceBundle.getBundle("sample/Nat", Locale.getDefault());
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setTitle(rb.getString("Error"));
@@ -82,9 +86,20 @@ public class LoginFormController implements Initializable {
 
     }
 
-    public void doLoginProcedure(){
-        String uName = loginUsernameField.getText();
-        String pWord = loginPasswordField.getText();
+    public void attemptLogger(String uName, boolean successful) throws IOException {
+        String fileName = "src/login_activity.txt";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime attemptedTime = LocalDateTime.now();
+        ZonedDateTime zdt = attemptedTime.atZone(ZoneOffset.UTC);
+        FileWriter fwriter = new FileWriter(fileName, true);
+        PrintWriter output = new PrintWriter(fwriter);
+        if (successful){
+            output.println(uName + " logged in successfully at " + zdt.format(dtf));
+        }
+        else{
+            output.println(uName + " tried unsuccessfully to log in at " + zdt.format(dtf));
+        }
+        output.close();
     }
 
     public void initialize(URL url, ResourceBundle rb){
