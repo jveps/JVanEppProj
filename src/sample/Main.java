@@ -9,7 +9,9 @@ import javafx.stage.Stage;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
-
+/**
+ This is the main class.
+ */
 public class Main extends Application {
 
     @Override
@@ -22,18 +24,14 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-
+    /**This is the main method. This method starts the program.*/
     public static void main(String[] args) {
         //Set language to "fr"
         //Locale.setDefault(new Locale("fr"));
 
         JDBC.openConnection();
 
-        //ResourceBundle rb = ResourceBundle.getBundle("sample/Nat", Locale.getDefault());
-        //if (Locale.getDefault().getLanguage().equals("fr")){
 
-        //    System.out.println(rb.getString("Username"));
-        //}
 
         launch(args);
         JDBC.closeConnection();

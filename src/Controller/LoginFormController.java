@@ -28,7 +28,8 @@ import java.util.TimeZone;
 
 import DAO.JDBC;
 import javafx.stage.Stage;
-
+/** This class controls the login form.
+ * @author Jessie Van Epps*/
 public class LoginFormController implements Initializable {
     @FXML
     private Label loginUsernameLabel;
@@ -54,6 +55,8 @@ public class LoginFormController implements Initializable {
     Scene scene;
     Stage stage;
 
+    /** Controls the actions of the OK button. Gets username and password, queries database to see if the login is successful. Logs successful and
+     * unsuccessful attempts. Checks if there is an appointment within 15 mins of user login. */
     @FXML
     void onActionOkButton(ActionEvent event) throws IOException, SQLException {
         String uName = loginUsernameField.getText();
@@ -89,6 +92,7 @@ public class LoginFormController implements Initializable {
 
     }
 
+    /** This method records login attempts. Records both successful and unsuccessful login attempts with data and time and username.*/
     public void attemptLogger(String uName, boolean successful) throws IOException {
         String fileName = "src/login_activity.txt";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -106,6 +110,7 @@ public class LoginFormController implements Initializable {
         output.close();
     }
 
+    /** Initializes the class. Gets default language, changes text based on users default language.*/
     public void initialize(URL url, ResourceBundle rb){
         //Gets default language
         rb = ResourceBundle.getBundle("sample/Nat", Locale.getDefault());
@@ -119,6 +124,7 @@ public class LoginFormController implements Initializable {
         zoneIDLabel.setText(zID.toString());
 
         //TEST
+        /*
         LocalDateTime ldt = LocalDateTime.now();
         ZonedDateTime zonedLDT = ldt.atZone(ZoneId.systemDefault());
         ZonedDateTime zonedEST = zonedLDT.withZoneSameInstant(ZoneId.of("America/New_York"));
@@ -134,7 +140,7 @@ public class LoginFormController implements Initializable {
 
         LocalDateTime sLDT = LocalDateTime.parse("2022-04-04 01:11:11",dtf);
         System.out.println(sLDT.isAfter(ldt));
-        System.out.println("SLDT " + sLDT.toString());
+        System.out.println("SLDT " + sLDT.toString());*/
 
 
     }

@@ -19,6 +19,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/** This class controls the additional reports screen.
+ * @author Jessie Van Epps*/
 public class AdditionalReportsController implements Initializable {
     @FXML
     private ChoiceBox<String> reportsMonthBox;
@@ -71,6 +73,7 @@ public class AdditionalReportsController implements Initializable {
     private ObservableList<Appointment> contactAppointmentsOL = FXCollections.observableArrayList();
     private ObservableList<Appointment> contactAppointmentsByYear = FXCollections.observableArrayList();
 
+    /** This controls the action of the month/type search button. This gets the month and type selected in choice boxes and queries database for total. */
     @FXML
     void searchReportsButtonPressed(ActionEvent event) throws SQLException {
         if (reportsMonthBox.getSelectionModel().isEmpty() || reportsTypeBox.getSelectionModel().isEmpty()){
@@ -87,6 +90,8 @@ public class AdditionalReportsController implements Initializable {
         }
     }
 
+    /** This controls the actions of the contacts combobox associated with the tableview on the screen. When a contact is selected, a schedule
+     * of the contacts appointments is displayed.*/
     @FXML
     void contactSelected(ActionEvent event) throws SQLException {
         contactAppointmentsOL = JDBC.getContactAppointments(contactComboBox.getValue());
@@ -101,6 +106,7 @@ public class AdditionalReportsController implements Initializable {
         appointmentCustIdCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
     }
 
+    /** This controls the action of the back button. Returns user to the record overview screen.*/
     @FXML
     void reportsBackButtonPressed(ActionEvent event) throws IOException {
 
@@ -110,6 +116,7 @@ public class AdditionalReportsController implements Initializable {
         stage.show();
     }
 
+    /** This controls the actions of the additional report search button on the bottom of screen. Queries database for total appointments by contact and year.*/
     @FXML
     void totalByYearButtonPressed(ActionEvent event) throws SQLException {
         if (yearInputField.getText().isBlank() || (!isNumeral(yearInputField.getText()) || yearInputField.getText().trim().length() != 4)){
@@ -123,6 +130,7 @@ public class AdditionalReportsController implements Initializable {
 
     }
 
+    /** This method checks if data entered is numeric. Based on: https://stackoverflow.com/a/1102916*/
     public static boolean isNumeral(String n){
         try {
             Double.parseDouble(n);
@@ -132,6 +140,8 @@ public class AdditionalReportsController implements Initializable {
         }
     }
 
+    /** Initializes the class. Sets two text boxes to not be edited. Adds data to choice box. Queries database for appointment types, contacts and sets them
+     * to comboboxes.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         reportsTotalField.setEditable(false);

@@ -13,7 +13,8 @@ import javax.xml.transform.Result;
 import java.sql.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-
+/** This class runs database queries. This class connects to the database and executes sql queries.
+ * @author Jessie Van Epps*/
 public abstract class JDBC {
     private static final String protocol = "jdbc";
     private static final String  vendor = ":mysql:";
@@ -26,7 +27,7 @@ public abstract class JDBC {
     public static Connection connection;
 
 
-
+    /** This method connects to the database. This method connects to the database to run queries.*/
     public static void openConnection(){
         try{
             Class.forName(driver); //LocateDriver
@@ -40,6 +41,7 @@ public abstract class JDBC {
         }
     }
 
+    /** This method closes the connection to the database. This method terminates the connection between the database and the application.*/
     public static void closeConnection(){
         try{
             connection.close();
@@ -51,12 +53,17 @@ public abstract class JDBC {
         }
     }
 
+    /** This method returns the connection object. This method returns the connection information.
+     * @return Connection*/
     public static Connection getConnection(){
         return connection;
     }
 
-    //This method checks the password data related to the name user_name column.
-    //if the password matches the string entered by the user, this method returns true
+
+    /** This method checks the password data related to the user_name column. If password matches string entered by the user, this returns true, otherwise false.
+     * @return boolean True or false depending on if the password  is correct.
+     * @param name The username entered by user
+     * @param pass The password entered by the user*/
     public static boolean loginTest(String name,String pass){
         try {
             String sql = "SELECT Password FROM users WHERE user_name = '" + name + "'";
@@ -85,7 +92,9 @@ public abstract class JDBC {
 
     }
 
-    //Returns observablelist of all countries
+
+    /** This method returns an observable list of all countries in the database. This method runs a query getting all entries in the countries table.
+     * @return allCountryObsList An observable list containing countries.*/
     public static ObservableList<String> getAllCountry(){
         ObservableList<String> allCountryObsList = FXCollections.observableArrayList();
         try {
@@ -103,7 +112,9 @@ public abstract class JDBC {
         return allCountryObsList;
     }
 
-    //This returns an observablelist of divisions related to to the country that was given
+    /** This method returns an observable list of divisions based on a given country. Queries the database table first_level_divisions to get divisions of a country.
+     * @param country A name of a country
+     * @return divisionObsList An observable list of strings of country divisions.*/
     public static ObservableList<String> getCountryDivisions(String country){
         ObservableList<String> divisionObsList = FXCollections.observableArrayList();
         try{
@@ -122,7 +133,15 @@ public abstract class JDBC {
         return divisionObsList;
     }
 
-    //Adds customer to db
+    /** This method updates customer information in the database. Executes a command updating an entry in the customers table.
+     * @param id Customer ID
+     * @param name Customer name
+     * @param address Customer address
+     * @param country Customer country
+     * @param division Customer division
+     * @param postCode Zip code
+     * @param phone Customer phone
+     * @return boolean Returns true if customer data updated successfully, otherwise false.*/
     public static boolean addCustomer(String id, String name, String address, String country, String division, String postCode, String phone){
         //String sql = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update," +
         //        "Last_Updated_By, Division_ID) VALUES ()";
@@ -132,10 +151,10 @@ public abstract class JDBC {
             ZonedDateTime currTime = ldt.atZone(ZoneId.systemDefault());
             String createdDate = currTime.format(dtf).toString();
 
-            //Testing data is currently present. divId variable is always set to 1.
+
             String createdBy = User.getUsername();
             String updatedBy = User.getUsername();
-            //String divId = "1";
+
             String lastUpdate = createdDate;
             /*String sql = "INSERT INTO customers (Customer_Name, Address," +
                     "Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By," +
@@ -149,7 +168,6 @@ public abstract class JDBC {
                     "Created_By= '%s', Last_Update= '%s', Last_Updated_By= '%s', Division_ID=(Select Division_ID from first_level_divisions where Division='%s') WHERE " +
                             "Customer_ID = '%s'", name,address,postCode,phone,createdDate,
                     createdBy,lastUpdate,updatedBy,division, id);
-            System.out.println(sql);
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ps.executeUpdate();
 
@@ -161,7 +179,9 @@ public abstract class JDBC {
         }
     }
 
-    //Add appointment to DB
+    /** This method updates appointment information in the database. This method updates appointment information in the appointments table.
+     * @param a An Appointment.
+     * @return boolean Returns true if successful, otherwise false*/
     public static boolean  addAppointment(Appointment a){
         try{
             ZonedDateTime zdt = LocalDateTime.now().atZone(ZoneOffset.UTC);
@@ -195,7 +215,9 @@ public abstract class JDBC {
         }
     }
 
-    //Gets next customer ID
+    /** This method gets the MAX Customer_ID from the customers table. This method quries the database customers table for the MAX(Customer_ID)
+     * @return maxId Returns the greatest customer ID from customers table.
+     * @return "ERROR" Returns a string that says error if something went wrong.*/
     public static String getNextCustomerId(){
         try {
             String maxId;
@@ -214,7 +236,9 @@ public abstract class JDBC {
         }
     }
 
-    //Gets next appointment ID
+    /** This method returns the MAX Appointment_ID. This method queries the database to get the MAX(Appointment_ID) from appointments table.
+     * @return maxAppId A string with the MAX appointment_ID
+     * @return "ERROR" Returns this string if something went wrong.*/
     public static String getNextAppointmentId(){
         try {
             String maxAppId;
@@ -230,7 +254,7 @@ public abstract class JDBC {
         }
     }
 
-    //Creates a temp customer to be modified when a new customer is added
+    /** This method creates a generic customer to be updated by the user. This method inserts a generic customer into the customers table to be updated or deleted later.*/
     public static void createTempCustomer(){
         try{
             String sql = "INSERT INTO customers (Customer_Name, Division_ID) VALUES ('tempName','1')";
@@ -242,16 +266,21 @@ public abstract class JDBC {
     }
 
     //Creates a temp appointment to be modified when a new appointment is added
+    /** This method creates a generic apointment to be updated by the user. This method inserts a generic appointment into the appointments table to be updated or deleted later.
+     * */
     public static void createTempAppointment(){
         try{
             String sql = "insert into appointments (Title, Customer_ID, User_ID, Contact_ID) values ('temp appointment', '1', '" + User.getID() +"', '999')";
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ps.executeUpdate();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /** This method deletes a customer from the customers table. This method first deletes appointments matching the customer id, then deletes the customer from customers.
+     * @param id The ID of the customer.*/
     public static void deleteCustomer(String id){
         try {
 
@@ -268,6 +297,8 @@ public abstract class JDBC {
         }
     }
 
+    /** This method deletes an appointment. This method executes a command that deletes an appointment from the appointments table.
+     * @return  boolean Returns true if successful, otherwise false.*/
     public static boolean deleteAppointment(String id){
         try{
             String sql = "DELETE FROM appointments WHERE Appointment_ID='" + id + "';";
@@ -280,6 +311,9 @@ public abstract class JDBC {
         }
     }
 
+    /** This method checks of an appointment overlaps with another. This method queries the database and compares times with the given appointment. Returns a true or false if there is an overlap.
+     * @param a An appointment.
+     * @return collide True or false depending on whether or not there is an overlapping appointment.*/
     public static boolean checkOverlappingAppointments(Appointment a){
         boolean collide = false;
         try{
@@ -331,6 +365,9 @@ public abstract class JDBC {
 
     }
 
+    /** This method checks to see if there is an appointment within 15 minutes of its execution. This method queries the database appointments table and
+     * checks to see if an appointment occurs within 15 minutes.
+     * @return boolean True if there is an appointment within 15 minutes, otherwise false.*/
     public static boolean checkFifteenMins() throws SQLException {
         System.out.println("Checking if there is an appointment within 15 minutes");
         String sql = "select * from appointments;";
@@ -357,6 +394,9 @@ public abstract class JDBC {
         return false;
     }
 
+    /** This method gets types of appointments. This method queries the database appointments table to get the different types of appointments
+     * that currently exist.
+     * @return typesOL An observable list of types of appointments.*/
     public static ObservableList<String> getAppointmentTypes() throws SQLException {
         String sql = "SELECT * FROM appointments;";
         PreparedStatement ps = getConnection().prepareStatement(sql);
@@ -372,6 +412,11 @@ public abstract class JDBC {
         return typesOL;
     }
 
+    /** This method counts the number of a type of an appointment in given month. This method queries the database appointments table
+     * and returns an int of the amount of an appointment type within a month.
+     * @param m A string representing a month
+     * @param t A string representing the type of appointment.
+     * @return returnedCount The amount of types in a month.*/
     public static int getAmountOfType(String m, String t) throws SQLException {
         //String sql = String.format("SELECT COUNT(Appointment_ID) as COUNT FROM appointments WHERE Start LIKE '%-%%s-%' and Type = '%s';", m,t);
         String sql = "SELECT COUNT(Appointment_ID) as COUNT FROM appointments WHERE Start LIKE '%-%" + m + "-%' and TYPE = '" + t + "';";
@@ -383,6 +428,8 @@ public abstract class JDBC {
         return returnedCount;
     }
 
+    /** This method gets the names of contacts. This method queries the database contacts table to get an observable list of contact_name.
+     * @return contactOL An observablelist of contact names.*/
     public static ObservableList getContacts() throws SQLException {
         ObservableList contactOL = FXCollections.observableArrayList();
         String sql = "SELECT * FROM contacts where Contact_ID NOT LIKE '999';";
@@ -394,6 +441,9 @@ public abstract class JDBC {
         return contactOL;
     }
 
+    /** This method gets the appointments belonging to a certain contact. This method queries the database to get the appointments belonging to a named contact.
+     * @param contactName A string of the name of a contact
+     * @return contactAppointmentsOL An observablelist of appointments*/
     public static ObservableList getContactAppointments(String contactName) throws SQLException {
         ObservableList<Appointment> contactAppointmentsOL = FXCollections.observableArrayList();
         //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -412,6 +462,11 @@ public abstract class JDBC {
         return contactAppointmentsOL;
     }
 
+    /** This method returns the number of appointments belonging to a contact in a certain year. This method queries the database appointments table
+     * to return the COUNT of appointments belonging to a contact in a given year.
+     * @param contact The name of the contact.
+     * @param year A string of the year to be searched.
+     * @return yearlyCount a String containing the COUNT of the query.*/
     public static String getYearlyContactCount(String year, String contact) throws SQLException {
         String sql = "select COUNT(Appointment_ID) as COUNT from appointments JOIN contacts on appointments.Contact_ID = contacts.Contact_ID where Contact_Name='" + contact +
                 "' and Start LIKE '" + year + "-%-%';";
@@ -425,6 +480,9 @@ public abstract class JDBC {
         return yearlyCount;
     }
 
+    /** This method gets the userID of a user. This method queries the database to get the User_ID from the users table, given a username.
+     * @param name The username of a user.
+     * @return id A string containing the user ID of the named user.*/
     public static String getCurrentUserID(String name) throws SQLException {
         String sql = "SELECT User_ID FROM users WHERE User_Name='" + name + "';";
         PreparedStatement ps = getConnection().prepareStatement(sql);

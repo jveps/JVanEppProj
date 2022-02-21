@@ -14,7 +14,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
+/** This class controls the modify customer screen.
+ * @author Jessie Van Epps*/
 public class ModifyCustomerController implements Initializable {
 
     @FXML
@@ -44,6 +45,7 @@ public class ModifyCustomerController implements Initializable {
     @FXML
     private ComboBox<String> modCustCityComboBox;
 
+    /** This controls the modify customer cancel button. This returns the user to the record overview screen.*/
     @FXML
     void modCustCancelButtonPressed(ActionEvent event) throws IOException {
         Stage stage;
@@ -53,6 +55,7 @@ public class ModifyCustomerController implements Initializable {
         stage.show();
     }
 
+    /** This controls the modify customer OK button. Checks to see if fields are blank. Adds modified customer data to database.*/
     @FXML
     void modCustOkButtonPressed(ActionEvent event) throws IOException {
         String newCustId = modCustIdField.getText();
@@ -93,6 +96,7 @@ public class ModifyCustomerController implements Initializable {
         };
     }
 
+    /** Controls the action of the country combo box. Queries the database to get country divisions.*/
     @FXML
     void modCustomerComBoxAction(ActionEvent event) {
         String a = modCustCountryComboBox.getValue();
@@ -104,6 +108,7 @@ public class ModifyCustomerController implements Initializable {
         modCustCityComboBox.setItems(JDBC.getCountryDivisions(a));
     }
 
+    /** Gets selected customer from record overview screen. Populates modify customer data with selected customer data.*/
     public void sendCustomer(Customer c){
         modCustIdField.setText(String.valueOf(c.getId()));
         modCustNameField.setText(c.getCustName());
@@ -117,6 +122,7 @@ public class ModifyCustomerController implements Initializable {
 
     }
 
+    /** Initializes the class. This method sets the choices in the country combobox and sets custID field to not be editable.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         modCustCountryComboBox.setItems(JDBC.getAllCountry());

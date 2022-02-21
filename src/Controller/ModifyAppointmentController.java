@@ -24,6 +24,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/** This class controls the modify appointment screen.
+ * @author Jessie Van Epps*/
 public class ModifyAppointmentController implements Initializable {
     @FXML
     private TextField modAppointmentAppIDField;
@@ -78,6 +80,7 @@ public class ModifyAppointmentController implements Initializable {
 
     private Appointment modifiedAppointment;
 
+    /** This controls the action of the cancel button. Returns user to the record overview screen.*/
     @FXML
     void modAppointmentCancelButtonPressed(ActionEvent event) throws IOException {
         Stage stage;
@@ -87,6 +90,8 @@ public class ModifyAppointmentController implements Initializable {
         stage.show();
     }
 
+    /**Controls the action of the OK button. Checks if fields are empty, Checks if appointment is outside business hours,
+     * checks if appointment overlaps with other appointments. Adds modified details to database.*/
     @FXML
     void modAppointmentOkButtonPressed(ActionEvent event) throws IOException {
         if (modAppointmentTitleField.getText().isBlank() || modAppointmentDescriptionField.getText().isBlank() ||
@@ -189,6 +194,8 @@ public class ModifyAppointmentController implements Initializable {
         }
     }
 
+    /** Adds data from selected appointment to populate fields on modify appointment screen. Gets data from selected appointment and populates data
+     * on modify appointment screen.*/
     public void sendAppointment(Appointment a){
         modifiedAppointment = a;
         modAppointmentAppIDField.setText(a.getAppointmentId());
@@ -251,6 +258,7 @@ public class ModifyAppointmentController implements Initializable {
 
     }
 
+    /** Initializes the modify appointment class. Sets appointment id field to not be editable. Adds data to choice boxes.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         modAppointmentAppIDField.setEditable(false);

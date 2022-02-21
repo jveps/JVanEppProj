@@ -23,6 +23,9 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
+/** This class controls the add appointments screen.
+ * @author Jessie Van Epps
+ */
 public class AddAppointmentController implements Initializable {
     @FXML
     private TextField addAppointmentAppIDField;
@@ -81,6 +84,7 @@ public class AddAppointmentController implements Initializable {
     @FXML
     private ChoiceBox<String> eTimeAMPM;
 
+    /** This method handles the behavior of the cancel button. This button returns user to record overview. */
     @FXML
     void addAppointmentCancelButtonPressed(ActionEvent event) throws IOException {
         JDBC.deleteAppointment(addAppointmentAppIDField.getText());
@@ -91,6 +95,8 @@ public class AddAppointmentController implements Initializable {
         stage.show();
     }
 
+    /** This method adds the created appointment to the database. This method checks that entered data is valid, checks if appointment is outside
+     * business hours. Checks for overlapping appointments. Adds appointment to database. */
     @FXML
     void addAppointmentOkButtonPressed(ActionEvent event) throws IOException {
 
@@ -193,10 +199,10 @@ public class AddAppointmentController implements Initializable {
 
 
 
-        //Next task here: needs to be converted to UTC???
-        //Also, needs to be added to database
+
     }
 
+    /** This method initializes the add appointment window. Adds appointment ID to text field, not editable. Sets items in choice box.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         addAppointmentAppIDField.setText(JDBC.getNextAppointmentId());

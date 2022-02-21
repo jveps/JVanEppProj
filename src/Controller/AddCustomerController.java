@@ -14,6 +14,9 @@ import java.util.ResourceBundle;
 import DAO.JDBC;
 import javafx.stage.Stage;
 
+/**This class controls the add customer button.
+ * @author Jessie Van Epps
+ * */
 public class AddCustomerController implements Initializable {
 
     @FXML
@@ -44,7 +47,7 @@ public class AddCustomerController implements Initializable {
     private Button addCustCancelButton;
 
 
-
+    /** This method initializes the add customer screen. Sets Customer ID text field to not be edited. Adds countries to combobox. Gets next custID into text field. */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         addCustIdField.setEditable(false);
@@ -57,10 +60,11 @@ public class AddCustomerController implements Initializable {
         addCustIdField.setText(JDBC.getNextCustomerId());
     }
 
+    /** This method controls the action of the country combobox. This queries the database to get the country divisions from selected country.*/
     @FXML
     void addCustomerComBoxAction(ActionEvent event) {
         String a = addCustCountryComboBox.getValue();
-        System.out.println(a);
+
         if (a != null){
             addCustCityComboBox.setDisable(false);
         }
@@ -68,6 +72,7 @@ public class AddCustomerController implements Initializable {
         addCustCityComboBox.setItems(JDBC.getCountryDivisions(a));
     }
 
+    /** This controls the OK button on the add customer screen. This method adds the customer data to the database.*/
     @FXML
     void addCustOkButtonPressed(ActionEvent event) throws IOException {
         String newCustId = addCustIdField.getText();
@@ -94,7 +99,7 @@ public class AddCustomerController implements Initializable {
         }
     }
 
-    //Removes the temp customer and returns to record overview
+    /** This controls the actions of the cancel button. This method deletes the temp customer created when the add customer button was pressed.*/
     @FXML
     void addCustCancelButtonPressed(ActionEvent event) throws IOException {
         JDBC.deleteCustomer(addCustIdField.getText());

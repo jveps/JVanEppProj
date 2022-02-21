@@ -29,6 +29,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
+/**This is the controller class for the record overview window.
+ * @author Jessie Van Epps*/
+
 public class RecordOverviewController implements Initializable {
 
     @FXML
@@ -115,7 +118,7 @@ public class RecordOverviewController implements Initializable {
     Stage stage;
 
 
-
+    /**This method adds data to the customer table. A query is executed that gets all customers from the database. */
     public void fillCustomerTable(){
         try {
             //String sql = "SELECT * FROM customers";
@@ -135,11 +138,11 @@ public class RecordOverviewController implements Initializable {
             e.printStackTrace();
         }
 
-        //Testing. May need to be changed later.
+
         CustomerTable.setItems(customerObsList);
     }
 
-    //Add data to appointments table
+    /**This method adds data to the appointments table. A query is executed that returns all appointments from the database.*/
     public void fillAppointmentTable(){
 
         try {
@@ -182,6 +185,8 @@ public class RecordOverviewController implements Initializable {
         AppointmentTable.setItems(appointmentObsList);
     }
 
+    /**This method controls what happens when quit is pressed.
+     * When pressed, this button closes the application.*/
     @FXML
     void quitButtonPressed(ActionEvent event) {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);
@@ -195,6 +200,9 @@ public class RecordOverviewController implements Initializable {
 
     }
 
+    /**This method controls what happens when the add customer button is pressed.
+     * This method opens the add customer window.
+     * */
     @FXML
     void addCustomerButtonPressed(ActionEvent event) {
         try {
@@ -208,6 +216,9 @@ public class RecordOverviewController implements Initializable {
         }
     }
 
+    /**This method controls what happens when the add appointment button is pressed.
+     * This method opens the add appointment window.
+     * */
     @FXML
     void addAppointmentButtonPressed(ActionEvent event) throws IOException {
         JDBC.createTempAppointment();
@@ -217,6 +228,9 @@ public class RecordOverviewController implements Initializable {
         stage.show();
     }
 
+    /** This method controls what happens when the modify customer button is pressed.
+     * * This method opens the modify customer window and sends selected customer to it.
+     * */
     @FXML
     void modifyCustomerButtonPressed(ActionEvent event) throws IOException{
         if (CustomerTable.getSelectionModel().getSelectedItem() == null){
@@ -238,6 +252,7 @@ public class RecordOverviewController implements Initializable {
         }
     }
 
+    /**This method controls the modify appointments button. The modify appointments screen is opened and the selected appointment is sent to it.*/
     @FXML
     void modAppointmentButtonPressed(ActionEvent event) throws IOException {
         if (AppointmentTable.getSelectionModel().getSelectedItem() == null) {
@@ -259,6 +274,7 @@ public class RecordOverviewController implements Initializable {
         }
     }
 
+    /**This controls the delecte customer button. This deletes a customer when the button is pressed.*/
     @FXML
     void deleteCustomerButtonPressed(ActionEvent event) throws IOException {
         if (CustomerTable.getSelectionModel().getSelectedItem() == null){
@@ -281,6 +297,7 @@ public class RecordOverviewController implements Initializable {
         }
     }
 
+    /**This controls the actions of the delete appointment button. This deletes the selected appointment from the database.*/
     @FXML
     void delAppointmentButtonPressed(ActionEvent event) {
         if (AppointmentTable.getSelectionModel().getSelectedItem() == null) {
@@ -316,7 +333,7 @@ public class RecordOverviewController implements Initializable {
         }
     }
 
-
+    /**This controls the behavior of the reports button. This button opens the additional reports screen. */
     @FXML
     void reportsButtonPressed(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -325,9 +342,11 @@ public class RecordOverviewController implements Initializable {
         stage.show();
     }
 
+    /**This method controls the weekly appointments radio button. This lambda expression looks for appointments within one week of the current date,
+     * then fills the table with them.*/
     @FXML
     void weeklyAppointmentsSelected(ActionEvent event) {
-        System.out.println("Weekly reports pressed");
+
         ObservableList<Appointment> currWeekApptsObsList = FXCollections.observableArrayList();
         LocalDateTime currDate = LocalDateTime.now();
 
@@ -343,22 +362,24 @@ public class RecordOverviewController implements Initializable {
         AppointmentTable.setItems(currWeekApptsObsList);
     }
 
+    /**This method controls the behavior of the all appointments radio button. This calls the fillAppointmentTable() method and adds all appointments
+     * to the table. */
     @FXML
     void allAppointmentsSelected(ActionEvent event) {
         fillAppointmentTable();
     }
 
+    /**This method controls the behavior of the monthly appointments radio button. The lambda expression within this method looks for appointments within
+     * the current month and adds them to the table. */
     @FXML
     void monthlyAppointmentsSelected(ActionEvent event) throws SQLException {
-        System.out.println("Monthly appts selected");
+
         LocalDateTime currDate = LocalDateTime.now();
         ObservableList<Appointment> currMonthApptsObsList = FXCollections.observableArrayList();
 
-        //JDBC.getCurrMonthAppointments(currDate.getYear(), currDate.getMonthValue());
-
         appointmentObsList.forEach(dayTime -> {
             LocalDateTime currMonthAppts = LocalDateTime.parse(dayTime.getStartDateTime(), DateTimeFormatter.ofPattern("yyyy-M-d H:m:s"));
-            System.out.println(currMonthAppts.format(DateTimeFormatter.ofPattern("yyyy-M-d")));
+
             if (currDate.getMonthValue() == currMonthAppts.getMonthValue()){
 
                 currMonthApptsObsList.add(dayTime);
@@ -370,11 +391,9 @@ public class RecordOverviewController implements Initializable {
 
     }
 
+    /**This method calls the methods that fill the appointment and customer tables. Also adds radio buttons to toggle group. */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //Testing User
-        System.out.println("Record overview starting");
-        System.out.println("Current user is: " + User.getUsername());
 
         //Test populate customer table
         CustomerTable.setItems(customerObsList);
