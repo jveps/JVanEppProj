@@ -496,4 +496,21 @@ public abstract class JDBC {
         
         return id;
     }
+
+    public static boolean doesCustomerExist(String id) throws SQLException {
+        boolean matchFound = false;
+        String sql = "Select * from customers where Customer_ID= '" + id + "';";
+        PreparedStatement ps = getConnection().prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()){
+            if (id == rs.getString("Customer_ID")){
+                matchFound = true;
+                System.out.println("Customer Found");
+            }else{
+                matchFound = false;
+                System.out.println("Customer not found");
+            }
+        }
+        return matchFound;
+    }
 }

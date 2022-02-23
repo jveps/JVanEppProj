@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -98,20 +99,19 @@ public class AddAppointmentController implements Initializable {
     /** This method adds the created appointment to the database. This method checks that entered data is valid, checks if appointment is outside
      * business hours. Checks for overlapping appointments. Adds appointment to database. */
     @FXML
-    void addAppointmentOkButtonPressed(ActionEvent event) throws IOException {
+    void addAppointmentOkButtonPressed(ActionEvent event) throws IOException, SQLException {
 
         //Check if fields are blank
         if (addAppointmentTitleField.getText().isBlank() || addAppointmentDescriptionField.getText().isBlank() || addAppointmentLocationField.getText().isBlank() ||
                 addAppointmentChoiceBox.getSelectionModel().isEmpty() || addAppointmentTypeField.getText().isBlank() || sTimeMonth.getSelectionModel().isEmpty() ||
                 sTimeDay.getSelectionModel().isEmpty() || sTimeYear.getSelectionModel().isEmpty() || sTimeHr.getSelectionModel().isEmpty() ||
                 sTimeMin.getSelectionModel().isEmpty() || sTimeAMPM.getSelectionModel().isEmpty() || eTimeHr.getSelectionModel().isEmpty() ||
-                eTimeAMPM.getSelectionModel().isEmpty() || addAppointmentCustIDField.getText().isBlank() || addAppointmentUserIDField.getText().isBlank()){
+                eTimeAMPM.getSelectionModel().isEmpty() || addAppointmentCustIDField.getText().isBlank() || addAppointmentUserIDField.getText().isBlank()) {
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("ERROR");
             a.setContentText("Please ensure all fields are filled");
             a.showAndWait();
-        }
-        else{
+        } else {
             String newAppID = addAppointmentAppIDField.getText();
             String newAppTitle = addAppointmentTitleField.getText();
             String newAppDescription = addAppointmentDescriptionField.getText();
@@ -134,54 +134,57 @@ public class AddAppointmentController implements Initializable {
             String newAppUserID = addAppointmentUserIDField.getText();
 
             //AM - PM add 12
-            if (sAMPM == "PM" && sHour != 12){
+            if (sAMPM == "PM" && sHour != 12) {
                 sHour += 12;
-            }
-            else if (eAMPM == "PM" && eHour != 12){
+            } else if (eAMPM == "PM" && eHour != 12) {
                 eHour += 12;
             }
 
-            LocalDateTime ldt = LocalDateTime.of(sYear,sMonth, sDay ,sHour, sMin);
-            LocalDateTime edt = LocalDateTime.of(sYear,sMonth,sDay,eHour, eMin);
+            LocalDateTime ldt = LocalDateTime.of(sYear, sMonth, sDay, sHour, sMin);
+            LocalDateTime edt = LocalDateTime.of(sYear, sMonth, sDay, eHour, eMin);
 
             //Check if time is within operating hours
-            LocalDateTime opHoursOpen = LocalDateTime.of(sYear,sMonth,sDay,8,0);
-            LocalDateTime opHoursClose = LocalDateTime.of(sYear,sMonth,sDay,22,0);
+            LocalDateTime opHoursOpen = LocalDateTime.of(sYear, sMonth, sDay, 8, 0);
+            LocalDateTime opHoursClose = LocalDateTime.of(sYear, sMonth, sDay, 22, 0);
 
             //if (ldt.getHour() < 8 || edt.getHour() > 22 || (edt.getHour() == 22 && edt.getMinute() > 0));
-            if (ldt.isBefore(opHoursOpen) || edt.isAfter(opHoursClose)){
+            if (ldt.isBefore(opHoursOpen) || edt.isAfter(opHoursClose)) {
                 Alert a = new Alert(Alert.AlertType.ERROR);
                 a.setTitle("Error");
                 a.setContentText("Appointment is outside of business hours");
                 a.showAndWait();
-            }
-            else{
+            } else {
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String formLDT = ldt.atOffset(ZoneOffset.UTC).format(dtf);
                 String formEDT = edt.atOffset(ZoneOffset.UTC).format(dtf);
                 System.out.println("FORMLDT: " + formLDT);
 
                 Appointment a = new Appointment(newAppID, newAppTitle, newAppDescription, newAppLocation, newAppContact,
-                newAppType, formLDT, formEDT, Integer.parseInt(newAppCustomerID), Integer.parseInt(newAppUserID));
+                        newAppType, formLDT, formEDT, Integer.parseInt(newAppCustomerID), Integer.parseInt(newAppUserID));
 
                 //check for overlapping appointments
-                if (!JDBC.checkOverlappingAppointments(a)){
+                if (!JDBC.checkOverlappingAppointments(a)) {
+                    if (JDBC.doesCustomerExist(newAppCustomerID)) {
 
-                    if(JDBC.addAppointment(a)){
-                        Stage stage;
-                        stage = (Stage)((Button)event.getSource()).getScene().getWindow();
-                        Parent scene = FXMLLoader.load(getClass().getResource("/View/RecordOverview.fxml"));
-                        stage.setScene(new Scene(scene));
-                        stage.show();
+                        if (JDBC.addAppointment(a)) {
+                            Stage stage;
+                            stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+                            Parent scene = FXMLLoader.load(getClass().getResource("/View/RecordOverview.fxml"));
+                            stage.setScene(new Scene(scene));
+                            stage.show();
+                        } else {
+                            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                            errorAlert.setTitle("Error");
+                            errorAlert.setContentText("Something went wrong");
+                            errorAlert.showAndWait();
+                        }
+                    } else {
+                        Alert noCustAlert = new Alert(Alert.AlertType.ERROR);
+                        noCustAlert.setTitle("ERROR");
+                        noCustAlert.setContentText("Must use existing customer");
+                        noCustAlert.showAndWait();
                     }
-                    else{
-                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                        errorAlert.setTitle("Error");
-                        errorAlert.setContentText("Something went wrong");
-                        errorAlert.showAndWait();
-                    }
-                }
-                else{
+                } else {
                     Alert overLapAlert = new Alert(Alert.AlertType.ERROR);
                     overLapAlert.setTitle("Error");
                     overLapAlert.setContentText("Overlapping appointment");
@@ -190,17 +193,15 @@ public class AddAppointmentController implements Initializable {
 
 
             }
+
+
         }
 
-
-
-
-
-
-
-
-
     }
+
+
+
+
 
     /** This method initializes the add appointment window. Adds appointment ID to text field, not editable. Sets items in choice box.*/
     @Override
