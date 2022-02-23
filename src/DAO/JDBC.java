@@ -270,7 +270,9 @@ public abstract class JDBC {
      * */
     public static void createTempAppointment(){
         try{
-            String sql = "insert into appointments (Title, Customer_ID, User_ID, Contact_ID) values ('temp appointment', '1', '" + User.getID() +"', '999')";
+            //Testing this implementation. selects max(customer_id). same for contact_id.
+            String sql = "insert into appointments (Title, Customer_ID, User_ID, Contact_ID) values ('temp appointment', (select max(Customer_ID) from customers), '" + User.getID() +"', (select max(Contact_ID) from contacts));";
+            System.out.println(sql);
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ps.executeUpdate();
 

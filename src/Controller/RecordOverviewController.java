@@ -142,7 +142,7 @@ public class RecordOverviewController implements Initializable {
         CustomerTable.setItems(customerObsList);
     }
 
-    /**This method adds data to the appointments table. A query is executed that returns all appointments from the database.*/
+    /** This method adds data to the appointments table. A query is executed that returns all appointments from the database.*/
     public void fillAppointmentTable(){
 
         try {
@@ -297,7 +297,7 @@ public class RecordOverviewController implements Initializable {
         }
     }
 
-    /**This controls the actions of the delete appointment button. This deletes the selected appointment from the database.*/
+    /** This controls the actions of the delete appointment button. This deletes the selected appointment from the database.*/
     @FXML
     void delAppointmentButtonPressed(ActionEvent event) {
         if (AppointmentTable.getSelectionModel().getSelectedItem() == null) {
@@ -342,7 +342,7 @@ public class RecordOverviewController implements Initializable {
         stage.show();
     }
 
-    /**This method controls the weekly appointments radio button. This lambda expression looks for appointments within one week of the current date,
+    /** This method controls the weekly appointments radio button. This lambda expression looks for appointments within one week of the current date,
      * then fills the table with them.*/
     @FXML
     void weeklyAppointmentsSelected(ActionEvent event) {

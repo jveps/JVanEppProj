@@ -156,10 +156,10 @@ public class ModifyAppointmentController implements Initializable {
             LocalDateTime openLDT = LocalDateTime.of(sYear, sMonth, sDay, 8,0);
             LocalDateTime closeLDT = LocalDateTime.of(sYear, sMonth, sDay, 22, 0);
             if (startZDTEST.isBefore(openLDT.atZone(ZoneId.of("America/New_York"))) || endZDTEST.isAfter(closeLDT.atZone(ZoneId.of("America/New_York"))) ){
-                System.out.println("Scheduled start: " + startZDTEST.getHour() + ":" + startZDTEST.getMinute() + " Day"+startZDTEST.getDayOfMonth());
+                /*System.out.println("Scheduled start: " + startZDTEST.getHour() + ":" + startZDTEST.getMinute() + " Day"+startZDTEST.getDayOfMonth());
                 System.out.println("Scheduled end: " + endZDTEST.getHour() + ":" + endZDTEST.getMinute() + " Day" + endZDTEST.getDayOfMonth());
                 System.out.println("Store opens: " + openLDT.getHour() + ":" + openLDT.getMinute() +" Day: " +openLDT.getDayOfMonth());
-                System.out.println("Store closes: " + closeLDT.getHour() + ":" + closeLDT.getMinute() + " Day: " + closeLDT.getDayOfMonth());
+                System.out.println("Store closes: " + closeLDT.getHour() + ":" + closeLDT.getMinute() + " Day: " + closeLDT.getDayOfMonth());*/
 
                 Alert a = new Alert(Alert.AlertType.ERROR);
                 a.setTitle("Error");

@@ -10,7 +10,8 @@ import javafx.stage.Stage;
 import java.util.Locale;
 import java.util.ResourceBundle;
 /**
- This is the main class.
+ This is the main class that starts the application.
+ @author Jessie Van Epps
  */
 public class Main extends Application {
 
