@@ -503,7 +503,9 @@ public abstract class JDBC {
         PreparedStatement ps = getConnection().prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         while (rs.next()){
-            if (id == rs.getString("Customer_ID")){
+            System.out.println("RS: " + rs.getString("Customer_ID"));
+            System.out.println("STRING: " + id);
+            if (id.equals(rs.getString("Customer_ID"))){
                 matchFound = true;
                 System.out.println("Customer Found");
             }else{
