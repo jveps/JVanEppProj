@@ -351,7 +351,7 @@ public class RecordOverviewController implements Initializable {
         LocalDateTime currDate = LocalDateTime.now();
 
         appointmentObsList.forEach(currWeek -> {
-            LocalDateTime currMonthAppts = LocalDateTime.parse(currWeek.getStartDateTime(), DateTimeFormatter.ofPattern("yyyy-M-d H:m:s"));
+            LocalDateTime currMonthAppts = LocalDateTime.parse(currWeek.getStartDateTime(), DateTimeFormatter.ofPattern("yyyy-M-d H:m:s.S"));
             System.out.println(currMonthAppts.format(DateTimeFormatter.ofPattern("yyyy-M-d")));
             if (currMonthAppts.isAfter(currDate) && currMonthAppts.isBefore(currDate.plusWeeks(1))){
                 System.out.println("Weekly appt found");
@@ -378,7 +378,7 @@ public class RecordOverviewController implements Initializable {
         ObservableList<Appointment> currMonthApptsObsList = FXCollections.observableArrayList();
 
         appointmentObsList.forEach(dayTime -> {
-            LocalDateTime currMonthAppts = LocalDateTime.parse(dayTime.getStartDateTime(), DateTimeFormatter.ofPattern("yyyy-M-d H:m:s"));
+            LocalDateTime currMonthAppts = LocalDateTime.parse(dayTime.getStartDateTime(), DateTimeFormatter.ofPattern("yyyy-M-d H:m:s.S"));
 
             if (currDate.getMonthValue() == currMonthAppts.getMonthValue()){
 
