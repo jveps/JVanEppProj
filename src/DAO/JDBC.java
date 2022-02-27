@@ -509,7 +509,7 @@ public abstract class JDBC {
             Appointment a = new Appointment(rs.getString("Appointment_ID"), rs.getString("Title"),
                         rs.getString("Description"), rs.getString("Location"),
                         rs.getString("Contact_Name"), rs.getString("Type"),
-                        rs.getString("Start"), rs.getString("End"), rs.getInt("Customer_ID"),
+                        /*rs.getString("Start")*/rs.getTimestamp("Start").toString(), /*rs.getString("End")*/rs.getTimestamp("End").toString(), rs.getInt("Customer_ID"),
                         rs.getInt("User_ID"));
             contactAppointmentsOL.add(a);
         }
