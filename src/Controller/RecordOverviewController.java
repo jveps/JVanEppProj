@@ -172,7 +172,7 @@ public class RecordOverviewController implements Initializable {
                 appointmentObsList.add(new Appointment(rs.getString("Appointment_ID"), rs.getString("Title"),
                         rs.getString("Description"), rs.getString("Location"),
                         rs.getString("Contact_Name"), rs.getString("Type"),
-                        /*rs.getString("Start")*/zonedStartLDT.format(dtf), /*rs.getString("End")*/zonedEndLDT.format(dtf), rs.getInt("Customer_ID"),
+                        /*zonedStartLDT.format(dtf)*/rs.getTimestamp("Start").toString(), /*rs.getString("End")zonedEndLDT.format(dtf)*/rs.getTimestamp("End").toString(), rs.getInt("Customer_ID"),
                         rs.getInt("User_ID")));
             }
         }

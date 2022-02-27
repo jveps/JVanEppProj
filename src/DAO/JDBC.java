@@ -5,6 +5,7 @@ import Model.Customer;
 import Model.User;
 import com.mysql.cj.protocol.Resultset;
 import com.mysql.cj.x.protobuf.MysqlxPrepare;
+import com.sun.scenario.effect.Offset;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -186,8 +187,13 @@ public abstract class JDBC {
         try{
             ZonedDateTime zdt = LocalDateTime.now().atZone(ZoneOffset.UTC);
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            Timestamp createdTS = Timestamp.from(Instant.now());
             String createdDate= zdt.format(dtf);
             String lastUpdate = zdt.format(dtf);
+            LocalDateTime sLDTUTC = LocalDateTime.parse(a.getStartDateTime(),dtf);
+            ZonedDateTime zoneStart = ZonedDateTime.of(sLDTUTC,ZoneId.systemDefault());
+            System.out.println("PST: " + zoneStart.getZone() + zoneStart.toString());
+            System.out.println("UTC? " + zoneStart.withZoneSameInstant(ZoneOffset.UTC).getZone() + zoneStart.withZoneSameInstant(ZoneOffset.UTC));
 
 
             String contactSQL = String.format("SELECT Contact_ID from contacts where Contact_Name= '%s'", a.getContact());
@@ -197,14 +203,35 @@ public abstract class JDBC {
             String contactID = rSet.getString("Contact_ID");
             System.out.println("Contact ID: " + contactID);
 
-            String sql = String.format("UPDATE appointments SET Title= '%s', Description= '%s', Location= '%s'," +
+            /*String sql = String.format("UPDATE appointments SET Title= '%s', Description= '%s', Location= '%s'," +
                     "Type= '%s', Start= '%s', End= '%s', Create_Date= '%s', Created_By= '%s', Last_Update= '%s', " +
                     "Last_Updated_By= '%s', Customer_ID= '%s', User_ID= '%s', Contact_ID= '%s' WHERE Appointment_ID= '%s';", a.getTitle(),
-                    a.getDescription(), a.getLocation(), a.getType(), a.getStartDateTime(), a.getEndDateTime(), createdDate, User.getUsername(), lastUpdate,
+                    a.getDescription(), a.getLocation(), a.getType(), a.getStartDateTime(), a.getEndDateTime(), OffsetDateTime.now(ZoneOffset.UTC).format(dtf), User.getUsername(), OffsetDateTime.now(ZoneOffset.UTC).format(dtf),
                     User.getUsername(), a.getCustomerId(), a.getUserId(), contactID, a.getAppointmentId());
-            System.out.println(sql);
+            System.out.println(sql);*/
 
-            PreparedStatement ps = getConnection().prepareStatement(sql);
+            //PreparedStatement ps = getConnection().prepareStatement(sql);
+            /*PreparedStatement ps = getConnection().prepareStatement(String.format("UPDATE appointments SET Title= '%s', Description= '%s', Location= '%s'," +
+                    "Type= '%s', Start= '%s', End= '%s', Create_Date= '%s', Created_By= '?', Last_Update= '%s', " +
+                    "Last_Updated_By= '%s', Customer_ID= '%s', User_ID= '%s', Contact_ID= '%s' WHERE Appointment_ID= '%s';", a.getTitle(),
+                    a.getDescription(), a.getLocation(), a.getType(), a.getStartDateTime(), a.getEndDateTime(), ps.setTimestamp(1,createdTS) /*OffsetDateTime.now(ZoneOffset.UTC).format(dtf), User.getUsername(), OffsetDateTime.now(ZoneOffset.UTC).format(dtf),
+                    User.getUsername(), a.getCustomerId(), a.getUserId(), contactID, a.getAppointmentId()));*/
+            PreparedStatement ps = getConnection().prepareStatement("UPDATE appointments SET Title=?, Description=?, Location=?, Type=?, Start=?, End=?, Create_Date=?, Created_By=?, Last_Update=?," +
+                    "Last_Updated_By=?, Customer_ID=?, User_ID=?, Contact_ID=? WHERE Appointment_ID=?");
+            ps.setString(1,a.getTitle());
+            ps.setString(2,a.getDescription());
+            ps.setString(3,a.getLocation());
+            ps.setString(4,a.getType());
+            ps.setTimestamp(5,Timestamp.valueOf(LocalDateTime.parse(a.getStartDateTime(),dtf)));
+            ps.setTimestamp(6,Timestamp.valueOf(LocalDateTime.parse(a.getEndDateTime(),dtf)));
+            ps.setTimestamp(7,Timestamp.from(Instant.now()));
+            ps.setString(8, User.getUsername());
+            ps.setTimestamp(9,Timestamp.from(Instant.now()));
+            ps.setString(10,User.getUsername());
+            ps.setString(11,String.valueOf(a.getCustomerId()));
+            ps.setString(12, String.valueOf(a.getUserId()));
+            ps.setString(13, contactID);
+            ps.setString(14, a.getAppointmentId());
             ps.executeUpdate();
             return true;
 
