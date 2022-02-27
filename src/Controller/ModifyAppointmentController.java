@@ -163,7 +163,9 @@ public class ModifyAppointmentController implements Initializable {
 
             LocalDateTime closeLDT = LocalDateTime.of(sYear, sMonth, sDay, 22, 0);
             ZonedDateTime closeZDT = closeLDT.atZone(ZoneId.of("America/New_York"));
-            if (startZDT.isBefore(openZDT) || endZDT.isAfter(closeZDT)/*startZDTEST.isBefore(openLDT.atZone(ZoneId.of("America/New_York"))) || endZDTEST.isAfter(closeLDT.atZone(ZoneId.of("America/New_York"))) */){
+            if (startZDT.isBefore(openZDT) || endZDT.isAfter(closeZDT) || startZDT.isAfter(endZDT)) {
+
+            /*startZDTEST.isBefore(openLDT.atZone(ZoneId.of("America/New_York"))) || endZDTEST.isAfter(closeLDT.atZone(ZoneId.of("America/New_York"))) */
                 /*System.out.println("Scheduled start: " + startZDTEST.getHour() + ":" + startZDTEST.getMinute() + " Day"+startZDTEST.getDayOfMonth());
                 System.out.println("Scheduled end: " + endZDTEST.getHour() + ":" + endZDTEST.getMinute() + " Day" + endZDTEST.getDayOfMonth());
                 System.out.println("Store opens: " + openLDT.getHour() + ":" + openLDT.getMinute() +" Day: " +openLDT.getDayOfMonth());
@@ -171,7 +173,7 @@ public class ModifyAppointmentController implements Initializable {
 
                 Alert a = new Alert(Alert.AlertType.ERROR);
                 a.setTitle("Error");
-                a.setContentText("Appointment is outside of business hours");
+                a.setContentText("Appointment is outside of business hours or time is invalid");
                 a.showAndWait();
 
             } else{
