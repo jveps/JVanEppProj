@@ -319,7 +319,9 @@ public abstract class JDBC {
     public static boolean checkOverlappingAppointments(Appointment a){
         boolean collide = false;
         try{
-            String sql = String.format("SELECT Start, End from appointments WHERE Customer_ID = '%s'", a.getCustomerId());
+            String sql = String.format("SELECT Start, End from appointments WHERE Customer_ID = '%s'", a.getCustomerId() +
+                    "' AND Appointment_ID NOT LIKE '" + a.getAppointmentId());
+            System.out.println("Mod apointment sql: " + sql);
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             LocalDateTime newAppStart = LocalDateTime.parse(a.getStartDateTime(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

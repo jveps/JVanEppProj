@@ -17,10 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -141,6 +138,14 @@ public class LoginFormController implements Initializable {
         LocalDateTime sLDT = LocalDateTime.parse("2022-04-04 01:11:11",dtf);
         System.out.println(sLDT.isAfter(ldt));
         System.out.println("SLDT " + sLDT.toString());*/
+        System.out.println("LDT now: " + LocalDateTime.now());
+        System.out.println("LDT UTC: " + LocalDateTime.now(ZoneOffset.UTC));
+        System.out.println("LDT East " + LocalDateTime.now(ZoneId.of("America/New_York")));
+
+        ZonedDateTime zdt = ZonedDateTime.now(ZoneId.systemDefault());
+        System.out.println("ZDT LOCAL: " + zdt.getZone() + zdt.toString());
+        System.out.println("ZDT UTC: " + zdt.withZoneSameInstant(ZoneOffset.UTC));
+        System.out.println("ZDT EST: " + zdt.withZoneSameInstant(ZoneId.of("America/New_York")));
 
 
     }
