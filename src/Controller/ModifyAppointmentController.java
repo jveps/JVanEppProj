@@ -163,7 +163,7 @@ public class ModifyAppointmentController implements Initializable {
 
             LocalDateTime closeLDT = LocalDateTime.of(sYear, sMonth, sDay, 22, 0);
             ZonedDateTime closeZDT = closeLDT.atZone(ZoneId.of("America/New_York"));
-            if (startZDT.isBefore(openZDT) || endZDT.isAfter(closeZDT) || startZDT.isAfter(endZDT)) {
+            if (startZDT.isBefore(openZDT) || endZDT.isAfter(closeZDT) || startZDT.isAfter(endZDT) || startZDT.isAfter(closeZDT) || endZDT.isBefore(openZDT)) {
 
             /*startZDTEST.isBefore(openLDT.atZone(ZoneId.of("America/New_York"))) || endZDTEST.isAfter(closeLDT.atZone(ZoneId.of("America/New_York"))) */
                 /*System.out.println("Scheduled start: " + startZDTEST.getHour() + ":" + startZDTEST.getMinute() + " Day"+startZDTEST.getDayOfMonth());

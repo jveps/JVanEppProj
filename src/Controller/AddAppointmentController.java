@@ -132,11 +132,11 @@ public class AddAppointmentController implements Initializable {
             String newAppUserID = addAppointmentUserIDField.getText();
 
             //AM - PM add 12
-            if (sAMPM == "PM" && sHour != 12) {
-                sHour += 12;
-            } else if (eAMPM == "PM" && eHour != 12) {
-                eHour += 12;
-            }
+            //if (sAMPM == "PM" && sHour != 12) {
+            //    sHour += 12;
+            //} else if (eAMPM == "PM" && eHour != 12) {
+            //    eHour += 12;
+            //}
 
             //LocalDateTime ldt = LocalDateTime.of(sYear, sMonth, sDay, sHour, sMin);
             //LocalDateTime edt = LocalDateTime.of(sYear, sMonth, sDay, eHour, eMin);
@@ -148,17 +148,20 @@ public class AddAppointmentController implements Initializable {
 
             //Check if time is within operating hours
 
+            ZonedDateTime startZDT = ldt.atZone(ZoneId.systemDefault());
+            ZonedDateTime endZDT = edt.atZone(ZoneId.systemDefault());
+
             LocalDateTime opHoursOpen = LocalDateTime.of(sYear, sMonth, sDay, 8, 0);
-            ZonedDateTime openZDT = ZonedDateTime.of(opHoursOpen,ZoneId.of("America/New_York"));
-            System.out.println("8AM in EST: " + openZDT);
-            System.out.println("8AM in PST: " + openZDT.withZoneSameInstant(ZoneId.systemDefault()));
+            ZonedDateTime openZDT = opHoursOpen.atZone(ZoneId.of("America/New_York"));
+
             LocalDateTime opHoursClose = LocalDateTime.of(sYear, sMonth, sDay, 22, 0);
+            ZonedDateTime closeZDT = opHoursClose.atZone(ZoneId.of("America/New_York"));
 
             //if (ldt.getHour() < 8 || edt.getHour() > 22 || (edt.getHour() == 22 && edt.getMinute() > 0));
-            if (ldt.isBefore(opHoursOpen) || edt.isAfter(opHoursClose)) {
+            if (startZDT.isBefore(openZDT) || startZDT.isAfter(closeZDT) || endZDT.isAfter(closeZDT) || endZDT.isBefore(openZDT)|| startZDT.isAfter(endZDT)) {
                 Alert a = new Alert(Alert.AlertType.ERROR);
                 a.setTitle("Error");
-                a.setContentText("Appointment is outside of business hours");
+                a.setContentText("Appointment is outside of business hours or hours are invalid");
                 a.showAndWait();
             } else {
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
