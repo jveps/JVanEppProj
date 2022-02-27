@@ -425,17 +425,21 @@ public abstract class JDBC {
     public static boolean checkFifteenMins() throws SQLException {
         System.out.println("Checking if there is an appointment within 15 minutes");
         String sql = "select * from appointments;";
-        ZonedDateTime zdt = Instant.now().atZone(ZoneId.of("America/New_York"));
-        LocalDateTime ldtEST = zdt.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
-        System.out.println("LDTEST " + ldtEST.toString());
+        //ZonedDateTime zdt = Instant.now().atZone(ZoneId.of("America/New_York"));
+        //LocalDateTime ldtEST = zdt.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
+        //System.out.println("LDTEST " + ldtEST.toString());
+        LocalDateTime ldt = LocalDateTime.now();
+        ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault());
         PreparedStatement ps = getConnection().prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         while (rs.next()){
             String returnedTimes = rs.getString("Start");
 
-            LocalDateTime returnedTimesLDT = LocalDateTime.parse(returnedTimes, DateTimeFormatter.ofPattern("yyyy-M-d H:m:s"));
-            System.out.println("Confirmation 15 mins parsing correctly: " + returnedTimesLDT.toString());
-            if (returnedTimesLDT.isAfter(ldtEST) && returnedTimesLDT.isBefore(ldtEST.plusMinutes(15))){
+            //LocalDateTime returnedTimesLDT = LocalDateTime.parse(returnedTimes, DateTimeFormatter.ofPattern("yyyy-M-d H:m:s"));
+            LocalDateTime returnedTimesLDT = rs.getTimestamp("Start").toLocalDateTime();
+            //LocalDateTime returnedTimesLDT = LocalDateTime.now().plusMinutes(10);
+            //System.out.println("Confirmation 15 mins parsing correctly: " + returnedTimesLDT.toString());
+            if (returnedTimesLDT.isAfter(zdt.toLocalDateTime()) && returnedTimesLDT.isBefore(zdt.toLocalDateTime().plusMinutes(15))){
                 System.out.println("Appointment found. RETURNED TIME: " + returnedTimesLDT.toString());
                 return true;
             }else{
