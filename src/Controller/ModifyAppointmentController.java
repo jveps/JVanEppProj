@@ -151,12 +151,19 @@ public class ModifyAppointmentController implements Initializable {
             ZonedDateTime endZDT = endLDT.atZone(ZoneId.systemDefault());
             ZonedDateTime endZDTEST = endZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
 
+
+
             System.out.println("STARTZDT: "+ startZDT.getZone() + startZDT.toString());
             System.out.println("EST TIME: " + startZDTEST.getZone() + startZDTEST.toString());
 
             LocalDateTime openLDT = LocalDateTime.of(sYear, sMonth, sDay, 8,0);
+            ZonedDateTime openZDT = openLDT.atZone(ZoneId.of("America/New_York"));
+            System.out.println("Opening time in EST: " + openZDT.getZone() + openZDT.toString());
+            System.out.println("Opening time in Default (PST) " + openZDT.withZoneSameInstant(ZoneId.systemDefault()));
+
             LocalDateTime closeLDT = LocalDateTime.of(sYear, sMonth, sDay, 22, 0);
-            if (startZDTEST.isBefore(openLDT.atZone(ZoneId.of("America/New_York"))) || endZDTEST.isAfter(closeLDT.atZone(ZoneId.of("America/New_York"))) ){
+            ZonedDateTime closeZDT = closeLDT.atZone(ZoneId.of("America/New_York"));
+            if (startZDT.isBefore(openZDT) || endZDT.isAfter(closeZDT)/*startZDTEST.isBefore(openLDT.atZone(ZoneId.of("America/New_York"))) || endZDTEST.isAfter(closeLDT.atZone(ZoneId.of("America/New_York"))) */){
                 /*System.out.println("Scheduled start: " + startZDTEST.getHour() + ":" + startZDTEST.getMinute() + " Day"+startZDTEST.getDayOfMonth());
                 System.out.println("Scheduled end: " + endZDTEST.getHour() + ":" + endZDTEST.getMinute() + " Day" + endZDTEST.getDayOfMonth());
                 System.out.println("Store opens: " + openLDT.getHour() + ":" + openLDT.getMinute() +" Day: " +openLDT.getDayOfMonth());
@@ -213,8 +220,9 @@ public class ModifyAppointmentController implements Initializable {
         modAppointmentLocationField.setText(a.getLocation());
         modAppointmentChoiceBox.getSelectionModel().select(a.getContact());
         modAppointmentTypeField.setText(a.getType());
-        LocalDateTime sLDT = LocalDateTime.parse(a.getStartDateTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime eLDT = LocalDateTime.parse(a.getEndDateTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        System.out.println("TEST PARSE: " + a.getStartDateTime());
+        LocalDateTime sLDT = LocalDateTime.parse(a.getStartDateTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S"));
+        LocalDateTime eLDT = LocalDateTime.parse(a.getEndDateTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S"));
         System.out.println(a.getStartDateTime());
         //DateTest
 

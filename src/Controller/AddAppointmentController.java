@@ -18,9 +18,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
@@ -140,11 +138,20 @@ public class AddAppointmentController implements Initializable {
                 eHour += 12;
             }
 
-            LocalDateTime ldt = LocalDateTime.of(sYear, sMonth, sDay, sHour, sMin);
-            LocalDateTime edt = LocalDateTime.of(sYear, sMonth, sDay, eHour, eMin);
+            //LocalDateTime ldt = LocalDateTime.of(sYear, sMonth, sDay, sHour, sMin);
+            //LocalDateTime edt = LocalDateTime.of(sYear, sMonth, sDay, eHour, eMin);
+            LocalDateTime ldt = LocalDateTime.parse(String.valueOf(sYear) + "-" + String.valueOf(sMonth) + "-" + String.valueOf(sDay) +
+                    " " + String.valueOf(sHour) + ":" + String.valueOf(sMin) + " " + sAMPM, DateTimeFormatter.ofPattern("yyyy-M-d h:m a"));
+
+            LocalDateTime edt = LocalDateTime.parse(String.valueOf(sYear) + "-" + String.valueOf(sMonth) + "-" + String.valueOf(sDay) +
+                    " " + String.valueOf(eHour) + ":" + String.valueOf(eMin) + " " + eAMPM, DateTimeFormatter.ofPattern("yyyy-M-d h:m a"));
 
             //Check if time is within operating hours
+
             LocalDateTime opHoursOpen = LocalDateTime.of(sYear, sMonth, sDay, 8, 0);
+            ZonedDateTime openZDT = ZonedDateTime.of(opHoursOpen,ZoneId.of("America/New_York"));
+            System.out.println("8AM in EST: " + openZDT);
+            System.out.println("8AM in PST: " + openZDT.withZoneSameInstant(ZoneId.systemDefault()));
             LocalDateTime opHoursClose = LocalDateTime.of(sYear, sMonth, sDay, 22, 0);
 
             //if (ldt.getHour() < 8 || edt.getHour() > 22 || (edt.getHour() == 22 && edt.getMinute() > 0));

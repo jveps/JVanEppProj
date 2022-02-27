@@ -165,11 +165,25 @@ public abstract class JDBC {
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ps.executeUpdate();
             ps.close();*/
-            String sql = String.format("UPDATE customers SET Customer_Name= '%s', Address= '%s', Postal_Code= '%s', Phone= '%s', Create_Date= '%s'," +
+            /*String sql = String.format("UPDATE customers SET Customer_Name= '%s', Address= '%s', Postal_Code= '%s', Phone= '%s', Create_Date= '%s'," +
                     "Created_By= '%s', Last_Update= '%s', Last_Updated_By= '%s', Division_ID=(Select Division_ID from first_level_divisions where Division='%s') WHERE " +
                             "Customer_ID = '%s'", name,address,postCode,phone,createdDate,
-                    createdBy,lastUpdate,updatedBy,division, id);
-            PreparedStatement ps = getConnection().prepareStatement(sql);
+                    createdBy,lastUpdate,updatedBy,division, id);*/
+            //PreparedStatement ps = getConnection().prepareStatement(sql);
+            PreparedStatement ps = getConnection().prepareStatement("UPDATE customers SET Customer_Name= ?, Address= ?, Postal_Code= ?, Phone= ?, Create_Date= ?," +
+                    "Created_By= ?, Last_Update= ?, Last_Updated_By= ?, Division_ID=(Select Division_ID from first_level_divisions where Division=?) WHERE " +
+                            "Customer_ID = ?");
+            ps.setString(1,name);
+            ps.setString(2,address);
+            ps.setString(3,postCode);
+            ps.setString(4,phone);
+            ps.setTimestamp(5,Timestamp.from(Instant.now()));
+            ps.setString(6,User.getUsername());
+            ps.setTimestamp(7,Timestamp.from(Instant.now()));
+            ps.setString(8,User.getUsername());
+            ps.setString(9,division);
+            ps.setString(10, id);
+
             ps.executeUpdate();
 
 
