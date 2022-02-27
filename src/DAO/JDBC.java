@@ -326,35 +326,39 @@ public abstract class JDBC {
             LocalDateTime newAppEnd = LocalDateTime.parse(a.getEndDateTime(),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
             while (rs.next()){
-                
-                LocalDateTime start = LocalDateTime.parse(rs.getString("Start"),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                LocalDateTime end = LocalDateTime.parse(rs.getString("End"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                System.out.println("RSNEST: " + rs.toString());
+                System.out.println(rs.getString("Start"));
+                if (!rs.wasNull()){
+                    LocalDateTime start = LocalDateTime.parse(rs.getString("Start"),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    LocalDateTime end = LocalDateTime.parse(rs.getString("End"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-                //Test
-                System.out.println("RS start: " + start);
-                System.out.println("RS end: " + end);
+                    //Test
+                    System.out.println("RS start: " + start);
+                    System.out.println("RS end: " + end);
 
 
-                if ((newAppStart.isAfter(start) || newAppStart.isEqual(start)) && newAppStart.isBefore(end)){
-                    System.out.println("OVerlap occured condition 1");
-                    collide = true;
-                    return collide;
+                    if ((newAppStart.isAfter(start) || newAppStart.isEqual(start)) && newAppStart.isBefore(end)){
+                        System.out.println("OVerlap occured condition 1");
+                        collide = true;
+                        return collide;
+                    }
+
+                    else if (newAppEnd.isAfter(start) && (newAppEnd.isBefore(end) || newAppEnd.isEqual(end))){
+                        System.out.println("Overlap occured condition 2");
+                        collide = true;
+                        return collide;
+                    }
+
+                    else if ((newAppStart.isBefore(start) || newAppStart.isEqual(start)) && (newAppEnd.isAfter(end) || newAppEnd.isEqual(end))){
+                        System.out.println("Overlap occured condition 3");
+                        collide = true;
+                        return collide;
+                    }
+                    else{
+                        collide = false;
+                    }
                 }
 
-                else if (newAppEnd.isAfter(start) && (newAppEnd.isBefore(end) || newAppEnd.isEqual(end))){
-                    System.out.println("Overlap occured condition 2");
-                    collide = true;
-                    return collide;
-                }
-
-                else if ((newAppStart.isBefore(start) || newAppStart.isEqual(start)) && (newAppEnd.isAfter(end) || newAppEnd.isEqual(end))){
-                    System.out.println("Overlap occured condition 3");
-                    collide = true;
-                    return collide;
-                }
-                else{
-                    collide = false;
-                }
 
 
             }
@@ -503,14 +507,13 @@ public abstract class JDBC {
         PreparedStatement ps = getConnection().prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         while (rs.next()){
-            System.out.println("RS: " + rs.getString("Customer_ID"));
-            System.out.println("STRING: " + id);
+
             if (id.equals(rs.getString("Customer_ID"))){
                 matchFound = true;
-                System.out.println("Customer Found");
+
             }else{
                 matchFound = false;
-                System.out.println("Customer not found");
+
             }
         }
         return matchFound;

@@ -17,6 +17,7 @@ import javafx.util.converter.LocalDateTimeStringConverter;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -93,7 +94,7 @@ public class ModifyAppointmentController implements Initializable {
     /**Controls the action of the OK button. Checks if fields are empty, Checks if appointment is outside business hours,
      * checks if appointment overlaps with other appointments. Adds modified details to database.*/
     @FXML
-    void modAppointmentOkButtonPressed(ActionEvent event) throws IOException {
+    void modAppointmentOkButtonPressed(ActionEvent event) throws IOException, SQLException {
         if (modAppointmentTitleField.getText().isBlank() || modAppointmentDescriptionField.getText().isBlank() ||
                 modAppointmentLocationField.getText().isBlank() || modAppointmentChoiceBox.getSelectionModel().isEmpty() ||
                 modAppointmentTypeField.getText().isBlank() || sTimeMonth.getSelectionModel().isEmpty() ||
@@ -173,17 +174,25 @@ public class ModifyAppointmentController implements Initializable {
                         Integer.parseInt(modAppCustID), Integer.parseInt(modAppUseID));
                 if (JDBC.checkOverlappingAppointments(tempAppointment)){
                     Alert overlapError = new Alert (Alert.AlertType.ERROR);
-                    overlapError.setTitle("ERRROR");
+                    overlapError.setTitle("ERROR");
                     overlapError.setContentText("Overlapping appointment");
                     overlapError.showAndWait();
                 }else{
-                    modifiedAppointment = tempAppointment;
-                    JDBC.addAppointment(modifiedAppointment);
+                    if(JDBC.doesCustomerExist(modAppCustID)){
+                        modifiedAppointment = tempAppointment;
+                        JDBC.addAppointment(modifiedAppointment);
 
-                    Stage stage = (Stage)((Button)event.getSource()).getScene().getWindow();
-                    Parent scene = FXMLLoader.load(getClass().getResource("/View/RecordOverview.fxml"));
-                    stage.setScene(new Scene(scene));
-                    stage.show();
+                        Stage stage = (Stage)((Button)event.getSource()).getScene().getWindow();
+                        Parent scene = FXMLLoader.load(getClass().getResource("/View/RecordOverview.fxml"));
+                        stage.setScene(new Scene(scene));
+                        stage.show();
+                    }else{
+                        Alert noCustError = new Alert (Alert.AlertType.ERROR);
+                        noCustError.setTitle("ERROR");
+                        noCustError.setContentText("Must use existing customer");
+                        noCustError.showAndWait();
+                    }
+
                 }
 
             }
