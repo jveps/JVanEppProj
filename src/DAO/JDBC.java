@@ -372,10 +372,15 @@ public abstract class JDBC {
                 System.out.println("RSNEST: " + rs.toString());
                 System.out.println(rs.getString("Start"));
                 if (!rs.wasNull()){
-                    LocalDateTime start = LocalDateTime.parse(rs.getString("Start"),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                    LocalDateTime end = LocalDateTime.parse(rs.getString("End"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    //LocalDateTime start = LocalDateTime.parse(rs.getString("Start"),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    //LocalDateTime end = LocalDateTime.parse(rs.getString("End"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime();
+                    LocalDateTime end = rs.getTimestamp("End").toLocalDateTime();
+
 
                     //Test
+                    System.out.println("NEWAPPSTART: " + newAppStart);
+                    System.out.println("NEWAPPEND: " + newAppEnd);
                     System.out.println("RS start: " + start);
                     System.out.println("RS end: " + end);
 
