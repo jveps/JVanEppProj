@@ -286,10 +286,10 @@ public class ModifyAppointmentController implements Initializable {
         sTimeDay.getItems().addAll(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
                 26,27,28,29,30,31);
         sTimeYear.getItems().addAll(2020, 2021, 2022);
-        sTimeHr.getItems().addAll(8,9,10,11,12,1,2,3,4,5,6,7,8,9,10);
+        sTimeHr.getItems().addAll(8,9,10,11,12,1,2,3,4,5,6,7);
         sTimeMin.getItems().addAll(00, 15,30,45);
         sTimeAMPM.getItems().addAll("AM", "PM");
-        eTimeHr.getItems().addAll(8,9,10,11,12,1,2,3,4,5,6,7,8,9,10);
+        eTimeHr.getItems().addAll(8,9,10,11,12,1,2,3,4,5,6,7);
         eTimeMin.getItems().addAll(00, 15,30,45);
         eTimeAMPM.getItems().addAll("AM", "PM");
     }
