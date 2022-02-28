@@ -83,20 +83,31 @@ public class AddCustomerController implements Initializable {
         String newCustPostalCode = addCustPostalCodeField.getText();
         String newCustPhoneNum = addCustPhoneField.getText();
 
-        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
-        a.setTitle("Add new customer");
-        a.setContentText("Are you sure you want to add this customer?");
-        a.showAndWait();
-        if (a.getResult() == ButtonType.OK){
-            if (JDBC.addCustomer(newCustId, newCustName, newCustAddress, newCustCountry, newCustDivision, newCustPostalCode, newCustPhoneNum)) {
+        if (addCustIdField.getText().isBlank() || addCustNameField.getText().isBlank() || addCustAddyField.getText().isBlank() ||
+        addCustCountryComboBox.getSelectionModel().isEmpty() || addCustCityComboBox.getSelectionModel().isEmpty() ||
+        addCustPostalCodeField.getText().isBlank() || addCustPhoneField.getText().isBlank()){
+            Alert blankFields = new Alert(Alert.AlertType.ERROR);
+            blankFields.setTitle("ERROR");
+            blankFields.setContentText("Please ensure all fields are filled");
+            blankFields.showAndWait();
+        }else{
+            Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+            a.setTitle("Add new customer");
+            a.setContentText("Are you sure you want to add this customer?");
+            a.showAndWait();
+            if (a.getResult() == ButtonType.OK){
+                if (JDBC.addCustomer(newCustId, newCustName, newCustAddress, newCustCountry, newCustDivision, newCustPostalCode, newCustPhoneNum)) {
 
-                Stage stage;
-                stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-                Parent scene = FXMLLoader.load(getClass().getResource("/View/RecordOverview.fxml"));
-                stage.setScene(new Scene(scene));
-                stage.show();
+                    Stage stage;
+                    stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+                    Parent scene = FXMLLoader.load(getClass().getResource("/View/RecordOverview.fxml"));
+                    stage.setScene(new Scene(scene));
+                    stage.show();
+                }
             }
         }
+
+
     }
 
     /** This controls the actions of the cancel button. This method deletes the temp customer created when the add customer button was pressed.*/

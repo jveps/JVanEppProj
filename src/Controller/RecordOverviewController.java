@@ -221,12 +221,23 @@ public class RecordOverviewController implements Initializable {
      * */
     @FXML
     void addAppointmentButtonPressed(ActionEvent event) throws IOException {
-        JDBC.createTempAppointment();
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        Parent scene = FXMLLoader.load(getClass().getResource("/View/addAppointment.fxml"));
-        stage.setScene(new Scene(scene));
-        stage.show();
+        if (CustomerTable.getItems().isEmpty()){
+            Alert noCustAlert = new Alert(Alert.AlertType.ERROR);
+            noCustAlert.setTitle("ERROR");
+            noCustAlert.setContentText("Add a customer first");
+            noCustAlert.showAndWait();
+        }else if (!CustomerTable.getItems().isEmpty()){
+            JDBC.createTempAppointment();
+            stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            Parent scene = FXMLLoader.load(getClass().getResource("/View/addAppointment.fxml"));
+            stage.setScene(new Scene(scene));
+            stage.show();
+        }
+
+
     }
+
+
 
     /** This method controls what happens when the modify customer button is pressed.
      * * This method opens the modify customer window and sends selected customer to it.
