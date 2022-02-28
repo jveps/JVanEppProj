@@ -499,13 +499,14 @@ public abstract class JDBC {
         return contactOL;
     }
 
-    /** This method gets the appointments belonging to a certain contact. This method queries the database to get the appointments belonging to a named contact.
+    /** This method gets the appointments belonging to a certain contact. This method queries the database to get the appointments belonging to a named contact. Lambda expression filters observable list by contact name.
      * @param contactName A string of the name of a contact
      * @return contactAppointmentsOL An observablelist of appointments*/
     public static ObservableList getContactAppointments(String contactName) throws SQLException {
         ObservableList<Appointment> contactAppointmentsOL = FXCollections.observableArrayList();
         //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String sql = String.format("SELECT * FROM appointments JOIN contacts ON appointments.Contact_ID = contacts.Contact_ID WHERE Contact_Name='%s';", contactName);
+        //String sql = String.format("SELECT * FROM appointments JOIN contacts ON appointments.Contact_ID = contacts.Contact_ID WHERE Contact_Name='%s';", contactName);
+        String sql = "SELECT * FROM appointments JOIN contacts ON appointments.Contact_ID = contacts.Contact_ID;";
         PreparedStatement ps = getConnection().prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
 
@@ -516,8 +517,10 @@ public abstract class JDBC {
                         /*rs.getString("Start")*/rs.getTimestamp("Start").toString(), /*rs.getString("End")*/rs.getTimestamp("End").toString(), rs.getInt("Customer_ID"),
                         rs.getInt("User_ID"));
             contactAppointmentsOL.add(a);
+
         }
-        return contactAppointmentsOL;
+        //return contactAppointmentsOL;
+        return contactAppointmentsOL.filtered(appointment -> appointment.getContact().equals(contactName));
     }
 
     /** This method returns the number of appointments belonging to a contact in a certain year. This method queries the database appointments table
