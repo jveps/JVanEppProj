@@ -108,6 +108,11 @@ public class ModifyAppointmentController implements Initializable {
             a.setTitle("ERROR");
             a.setContentText("Please ensure all fields are filled");
             a.showAndWait();
+        }else if(!JDBC.doesUserExist(modAppointmentUserIDField.getText().strip())){
+            Alert noUserAlert = new Alert(Alert.AlertType.ERROR);
+            noUserAlert.setTitle("ERROR");
+            noUserAlert.setContentText("User does not exist");
+            noUserAlert.showAndWait();
         }else{
             String modAppID = modAppointmentAppIDField.getText();
             String modAppTitle = modAppointmentTitleField.getText();
