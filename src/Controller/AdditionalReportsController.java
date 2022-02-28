@@ -91,11 +91,11 @@ public class AdditionalReportsController implements Initializable {
     }
 
     /** This controls the actions of the contacts combobox associated with the tableview on the screen. When a contact is selected, a schedule
-     * of the contacts appointments is displayed.*/
+     * of the contacts appointments is displayed. The lambda expression filters the appointments by contact name.*/
     @FXML
     void contactSelected(ActionEvent event) throws SQLException {
-        contactAppointmentsOL = JDBC.getContactAppointments(contactComboBox.getValue());
-        contactScheduleTableView.setItems(contactAppointmentsOL);
+        contactAppointmentsOL = JDBC.getContactAppointments();
+        contactScheduleTableView.setItems(contactAppointmentsOL.filtered(appointment -> appointment.getContact().equals(contactComboBox.getValue())));
         appointmentIdCol.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
         appointmentTitleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         appointmentDescrCol.setCellValueFactory(new PropertyValueFactory<>("description"));
