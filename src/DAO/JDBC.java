@@ -570,4 +570,19 @@ public abstract class JDBC {
         }
         return matchFound;
     }
+
+    public static boolean doesUserExist(String id) throws SQLException {
+        boolean matchFound = false;
+        String sql = "SELECT * FROM users where User_ID = '" + id + "';";
+        PreparedStatement ps = getConnection().prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()){
+            if (id.equals(rs.getString("User_ID"))){
+                matchFound = true;
+            }else{
+                matchFound = false;
+            }
+        }
+        return matchFound;
+    }
 }

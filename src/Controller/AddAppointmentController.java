@@ -109,7 +109,12 @@ public class AddAppointmentController implements Initializable {
             a.setTitle("ERROR");
             a.setContentText("Please ensure all fields are filled");
             a.showAndWait();
-        } else {
+        }else if (!JDBC.doesUserExist(addAppointmentUserIDField.getText().strip())){
+            Alert noUserAlert = new Alert(Alert.AlertType.ERROR);
+            noUserAlert.setTitle("ERROR");
+            noUserAlert.setContentText("User does not exist");
+            noUserAlert.showAndWait();
+        }else {
             String newAppID = addAppointmentAppIDField.getText();
             String newAppTitle = addAppointmentTitleField.getText();
             String newAppDescription = addAppointmentDescriptionField.getText();
