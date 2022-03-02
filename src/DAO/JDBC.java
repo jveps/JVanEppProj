@@ -9,6 +9,7 @@ import com.sun.scenario.effect.Offset;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 
 import javax.xml.transform.Result;
 import java.sql.*;
@@ -420,7 +421,7 @@ public abstract class JDBC {
     }
 
     /** This method checks to see if there is an appointment within 15 minutes of its execution. This method queries the database appointments table and
-     * checks to see if an appointment occurs within 15 minutes.
+     * checks to see if an appointment occurs within 15 minutes. Creates alert if this is the case.
      * @return boolean True if there is an appointment within 15 minutes, otherwise false.*/
     public static boolean checkFifteenMins() throws SQLException {
         System.out.println("Checking if there is an appointment within 15 minutes");
@@ -439,8 +440,13 @@ public abstract class JDBC {
             LocalDateTime returnedTimesLDT = rs.getTimestamp("Start").toLocalDateTime();
             //LocalDateTime returnedTimesLDT = LocalDateTime.now().plusMinutes(10);
             //System.out.println("Confirmation 15 mins parsing correctly: " + returnedTimesLDT.toString());
+            ///if (returnedTimesLDT.isAfter(zdt.toLocalDateTime()) && returnedTimesLDT.isBefore(zdt.toLocalDateTime().plusHours(5))){
             if (returnedTimesLDT.isAfter(zdt.toLocalDateTime()) && returnedTimesLDT.isBefore(zdt.toLocalDateTime().plusMinutes(15))){
                 System.out.println("Appointment found. RETURNED TIME: " + returnedTimesLDT.toString());
+                Alert _15MinAlert = new Alert(Alert.AlertType.INFORMATION);
+                _15MinAlert.setTitle("IMPORTANT");
+                _15MinAlert.setContentText("Appointment within 15 minutes. ID: " + rs.getString("Appointment_ID") + " Date/Time: " + rs.getString("Start"));
+                _15MinAlert.showAndWait();
                 return true;
             }else{
                 System.out.println("No appointments within 15 mins");

@@ -65,10 +65,11 @@ public class LoginFormController implements Initializable {
             System.out.println("The current user is: " + currentUser.getUsername());
 
             if (JDBC.checkFifteenMins()){
-                Alert _15MinAlert = new Alert(Alert.AlertType.INFORMATION);
+                /*Alert _15MinAlert = new Alert(Alert.AlertType.INFORMATION);
                 _15MinAlert.setTitle("IMPORTANT");
                 _15MinAlert.setContentText("Appointment within 15 minutes");
-                _15MinAlert.showAndWait();
+                _15MinAlert.showAndWait();*/
+                System.out.println("Appointment within 15 mins found");
             }
             //Open RecordOverview screen
             stage = (Stage)((Button)event.getSource()).getScene().getWindow();
